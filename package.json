@@ -1,0 +1,50 @@
+{
+  "name": "conventional-commits-playground",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A dedicated playground to practice and master the Conventional Commits specification.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "commit": "cz",
+    "release:preview": "commit-and-tag-version --dry-run",
+    "release": "commit-and-tag-version",
+    "release:first": "commit-and-tag-version --first-release",
+    "release:major": "commit-and-tag-version --release-as major",
+    "release:minor": "commit-and-tag-version --release-as minor",
+    "release:patch": "commit-and-tag-version --release-as patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/batressc/conventional-commits-playground.git"
+  },
+  "keywords": [
+    "conventional-commits",
+    "semver",
+    "playground",
+    "education"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/batressc/conventional-commits-playground/issues"
+  },
+  "homepage": "https://github.com/batressc/conventional-commits-playground#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
+    "commit-and-tag-version": "^12.6.1",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "vite": "^7.3.1"
+  }
+}

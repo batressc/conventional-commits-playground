@@ -104,23 +104,67 @@ Feature Development Flow:
 7. Delete feature branch
 
 Release Preparation Flow:
-1. Create release branch from develop: git checkout -b release/1.0.0 develop
-2. Make final adjustments and bug fixes
-3. Update version numbers and documentation
-4. Create Pull Request to main
-5. After approval, merge to main
-6. Merge changes back to develop
+1. Create release branch from develop: git checkout -b release/X.Y.Z develop
+2. Run npm run release (calculates version, updates CHANGELOG.md, creates release commit)
+   - For first release: npm run release:first
+   - To force specific version: npm run release:major or release:minor or release:patch
+3. Push branch and create Pull Request to main
+4. After approval, merge to main (preferably Squash Merge)
+5. Create tag on main: git tag -a vX.Y.Z -m "chore(release): X.Y.Z" then git push origin vX.Y.Z
+6. Merge main back to develop: git checkout develop && git merge main && git push origin develop
 7. Delete release branch
-8. Tag the release in main
+
+Note on tags: commit-and-tag-version is configured with skip.tag: true because squash merge creates a new commit on main. Tag must be created on main after merge to point to correct commit.
 
 Hotfix Flow:
 1. Create hotfix branch from main: git checkout -b hotfix/456-critical-fix main
 2. Fix the critical issue
-3. Create Pull Request to main
+3. Run npm run release:patch (generates CHANGELOG + version bump + commit)
+4. Push branch and create Pull Request to main
 4. After approval, merge to main
-5. Merge changes back to develop
-6. Delete hotfix branch
-7. Tag the hotfix in main
+5. Create tag on main: git tag -a vX.Y.Z -m "chore(release): X.Y.Z" then git push origin vX.Y.Z
+6. Merge main back to develop
+7. Delete hotfix branch
+
+## Conventional Commits
+
+Project adopts Conventional Commits v1.0.0 specification (https://www.conventionalcommits.org/) for all commit messages. This enables automatic CHANGELOG generation, semantic version calculation, and clean commit history.
+
+Commit message format: <type>(<optional scope>): <description>, with optional body and footer sections separated by blank lines.
+
+Valid types: feat (MINOR bump), fix (PATCH bump), docs, style, refactor, perf (PATCH bump), test, build, ci, chore, revert. Breaking changes (indicated by ! after type/scope or BREAKING CHANGE footer) trigger MAJOR bump.
+
+Tooling installed:
+- commitlint + husky: Automatic validation via commit-msg git hook. Commits not following conventional format are rejected. Config: commitlint.config.js.
+- commitizen: Interactive terminal assistant via npm run commit. Guides through type, scope, description, body, breaking changes, and issues.
+- VS Code extension vivaxy.vscode-conventional-commits: Recommended in .vscode/extensions.json. Visual assistant in Source Control panel.
+
+## Semantic Versioning (SemVer)
+
+Project adopts Semantic Versioning 2.0.0 (https://semver.org/). Format: MAJOR.MINOR.PATCH. MAJOR for breaking changes, MINOR for new features, PATCH for bug fixes.
+
+Version is calculated automatically by commit-and-tag-version (successor to standard-version) based on conventional commits since last tag. Configuration in .versionrc.json at project root.
+
+Available scripts: npm run release:preview (dry-run to preview next version without changes), npm run release (auto-calculate), npm run release:first (first release, no bump), npm run release:major, npm run release:minor, npm run release:patch (force specific bump level).
+
+Tag creation is skipped by commit-and-tag-version (skip.tag: true in config) because squash merge creates new commit on main. Tags must be created manually on main after merge.
+
+## Release Process
+
+Release integrates Git Flow with commit-and-tag-version:
+1. Preview next version from develop: git checkout develop && npm run release:preview (shows version without making changes)
+2. Create release branch with calculated version: git checkout -b release/X.Y.Z develop
+3. Run npm run release (updates package.json version, generates/updates CHANGELOG.md, creates chore(release): X.Y.Z commit)
+4. Push branch, create PR to main, get approval, merge
+5. On main: create annotated tag git tag -a vX.Y.Z -m "chore(release): X.Y.Z" and push tag
+6. Merge main back to develop
+7. Delete release branch
+
+Hotfix release: Same process but branch from main, typically use npm run release:patch.
+
+## CHANGELOG
+
+CHANGELOG.md is generated and updated automatically by commit-and-tag-version. Must not be edited manually. Groups changes by version and type. Visible types in CHANGELOG: Features (feat), Bug Fixes (fix), Performance Improvements (perf), Reverts (revert). Other types are hidden by default (.versionrc.json configuration).
 
 ## Markdown File Conventions
 
@@ -179,6 +223,11 @@ When working with this repository:
 - Delete branches after merge to keep repository clean
 - All discussions in PR must be resolved before merge is allowed
 - Minimum one approval is required for any PR to protected branches
+- All commit messages must follow Conventional Commits format
+- Use npm run commit for interactive commit assistant or VS Code Conventional Commits extension
+- Never edit CHANGELOG.md manually; it is auto-generated by commit-and-tag-version
+- Follow the Release Process for all version bumps: run npm run release in release branch, create tag on main after merge
+- Tags are created on main after merge, not on the release branch
 
-Last updated: 2026-02-07
-Version: 1.0.0
+Last updated: 2026-02-10
+Version: 2.0.0

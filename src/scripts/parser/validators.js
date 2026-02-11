@@ -1,0 +1,202 @@
+/**
+ * Commit message validators
+ * Pure validation functions for header, body, and footer
+ * @module parser/validators
+ */
+
+import { HEADER_REGEX, FOOTER_LINE_REGEX } from '../constants/commitTypes.js';
+
+/**
+ * @typedef {Object} HeaderValidationResult
+ * @property {boolean} isValid - Whether the header is valid
+ * @property {boolean} hasBreakingIndicator - Whether ! is present before colon
+ * @property {string} semVerImpact - 'MAJOR' | 'MINOR' | 'PATCH' | 'NONE'
+ * @property {string[]} errors - List of error messages
+ */
+
+/**
+ * Validates the commit header
+ * @param {string} header - The header line
+ * @param {boolean} hasBreakingFooter - Whether a BREAKING CHANGE footer exists
+ * @returns {HeaderValidationResult} Validation result
+ * @example
+ * validateHeader('feat(auth): add login', false);
+ * // Returns: { isValid: true, hasBreakingIndicator: false, semVerImpact: 'MINOR', errors: [] }
+ * 
+ * validateHeader('invalid header', false);
+ * // Returns: { isValid: false, semVerImpact: 'NONE', errors: ['validation.header.invalidFormat'] }
+ */
+export const validateHeader = (header, hasBreakingFooter = false) => {
+    const errors = [];
+    let isValid = false;
+    let hasBreakingIndicator = false;
+    let semVerImpact = 'NONE';
+
+    if (HEADER_REGEX.test(header)) {
+        isValid = true;
+        
+        const parts = header.split(':');
+        const prefix = parts[0];
+        hasBreakingIndicator = prefix.includes('!');
+
+        // Determine SemVer impact
+        if (hasBreakingIndicator || hasBreakingFooter) {
+            semVerImpact = 'MAJOR';
+        } else if (prefix.startsWith('feat')) {
+            semVerImpact = 'MINOR';
+        } else if (prefix.startsWith('fix')) {
+            semVerImpact = 'PATCH';
+        } else {
+            semVerImpact = 'NONE';
+        }
+    } else {
+        errors.push('validation.header.invalidFormat');
+    }
+
+    return {
+        isValid,
+        hasBreakingIndicator,
+        hasBreakingFooter,
+        semVerImpact,
+        errors
+    };
+};
+
+/**
+ * @typedef {Object} BodyValidationResult
+ * @property {boolean} isValid - Whether the body is valid
+ * @property {boolean} isEmpty - Whether body has content
+ * @property {string[]} errors - List of error messages
+ */
+
+/**
+ * Validates the commit body
+ * @param {string[]} lines - All original commit lines
+ * @param {number} footerStartIndex - Index where footer starts (-1 if none)
+ * @returns {BodyValidationResult} Validation result
+ * @example
+ * validateBody(['feat: add login', '', 'This adds login functionality'], -1);
+ * // Returns: { isValid: true, isEmpty: false, bodyText: 'This adds login functionality', errors: [] }
+ */
+export const validateBody = (lines, footerStartIndex = -1) => {
+    const errors = [];
+    
+    // If only header, body is not required
+    if (lines.length <= 1) {
+        return { isValid: true, isEmpty: true, errors };
+    }
+
+    // Get body lines
+    let bodyLines;
+    if (footerStartIndex !== -1) {
+        bodyLines = lines.slice(1, footerStartIndex - 1);
+    } else {
+        bodyLines = lines.slice(1);
+    }
+
+    const bodyText = bodyLines.join('\n').trim();
+    const isEmpty = bodyText === '';
+
+    // Rule: Blank line after header
+    if (lines[1].trim() !== '') {
+        errors.push('validation.body.missingBlankLine');
+    }
+
+    // Check for misplaced BREAKING CHANGE in body
+    if (/^BREAKING CHANGE:/m.test(bodyText)) {
+        if (footerStartIndex !== -1) {
+            errors.push('validation.body.duplicateBreakingChange');
+        } else {
+            errors.push('validation.body.breakingChangeNeedsBlankLine');
+        }
+    }
+
+    return {
+        isValid: errors.length === 0,
+        isEmpty,
+        bodyText,
+        errors
+    };
+};
+
+/**
+ * @typedef {Object} FooterValidationResult
+ * @property {boolean} isValid - Whether footer is valid
+ * @property {boolean} hasBreakingChange - Whether BREAKING CHANGE footer exists
+ * @property {string[]} errors - List of error messages
+ */
+
+/**
+ * Validates footer lines
+ * @param {string[]} footerLines - Array of footer lines
+ * @returns {FooterValidationResult} Validation result
+ * @example
+ * validateFooter(['BREAKING CHANGE: API v1 removed']);
+ * // Returns: { isValid: true, hasBreakingChange: true, errors: [] }
+ */
+export const validateFooter = (footerLines) => {
+    const errors = [];
+    let hasBreakingChange = false;
+
+    if (footerLines.length === 0) {
+        return { isValid: true, hasBreakingChange, errors };
+    }
+
+    footerLines.forEach((line, index) => {
+        if (line.trim() === '') return;
+
+        const tokenMatch = line.match(FOOTER_LINE_REGEX);
+
+        if (tokenMatch) {
+            const token = tokenMatch[1];
+            const separator = tokenMatch[2];
+            const value = tokenMatch[3];
+
+            if (token === 'BREAKING CHANGE' || token === 'BREAKING-CHANGE') {
+                hasBreakingChange = true;
+                
+                // Strict validation for BREAKING CHANGE
+                if (separator !== ': ') {
+                    errors.push('validation.footer.breakingChangeSeparator');
+                } else if (!value || value.trim() === '') {
+                    errors.push('validation.footer.breakingChangeEmpty');
+                }
+            } else {
+                // Validation for other tokens
+                if (/\s/.test(token)) {
+                    if (token.toUpperCase() === 'BREAKING CHANGE') {
+                        errors.push('validation.footer.breakingChangeCase');
+                    } else if (token.toUpperCase() === 'BREAKING CHANGES') {
+                        errors.push('validation.footer.breakingChangePlural');
+                    } else {
+                        errors.push('validation.footer.tokenWithSpaces');
+                    }
+                }
+            }
+        } else {
+            // First line must be valid footer format
+            if (index === 0) {
+                errors.push('validation.footer.invalidFormat');
+            }
+        }
+    });
+
+    return {
+        isValid: errors.length === 0,
+        hasBreakingChange,
+        errors
+    };
+};
+
+/**
+ * Determines the SemVer impact based on commit type and breaking changes
+ * @param {string} type - Commit type (feat, fix, etc.)
+ * @param {boolean} hasBreakingChange - Whether there's a breaking change
+ * @returns {'MAJOR' | 'MINOR' | 'PATCH' | 'NONE'} SemVer impact level
+ */
+export const determineSemVerImpact = (type, hasBreakingChange) => {
+    if (hasBreakingChange) return 'MAJOR';
+    if (type === 'feat') return 'MINOR';
+    if (type === 'fix') return 'PATCH';
+    return 'NONE';
+};
