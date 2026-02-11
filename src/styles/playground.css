@@ -1,12 +1,12 @@
 /* === Playground Interactive Area === */
-.playground-area {
+.playground {
     background: linear-gradient(to right, #f8fafc, #ffffff);
     border: 2px dashed #cbd5e1;
     padding: 2rem;
     border-radius: 12px;
 }
 
-.input-wrapper {
+.playground__input-wrapper {
     margin-bottom: 1rem;
 }
 
@@ -37,14 +37,14 @@ textarea:focus {
 }
 
 /* === Visual Breakdown (Validation Cards) === */
-.visual-stack {
+.playground__visual-stack {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-top: 1.5rem;
 }
 
-.vb-card {
+.visual-breakdown__card {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -53,11 +53,11 @@ textarea:focus {
     transition: all 0.2s;
 }
 
-.vb-card.valid   { border-left: 4px solid var(--success); }
-.vb-card.error   { border-left: 4px solid var(--danger); border-color: #fee2e2; background: #fff5f5; }
-.vb-card.neutral { border-left: 4px solid #cbd5e1; }
+.visual-breakdown__card--valid   { border-left: 4px solid var(--success); }
+.visual-breakdown__card--error   { border-left: 4px solid var(--danger); border-color: #fee2e2; background: #fff5f5; }
+.visual-breakdown__card--neutral { border-left: 4px solid #cbd5e1; }
 
-.vb-pill {
+.visual-breakdown__pill {
     position: absolute;
     top: 0.75rem;
     right: 1rem;
@@ -70,7 +70,7 @@ textarea:focus {
     background: #f1f5f9;
 }
 
-.vb-content {
+.visual-breakdown__content {
     font-family: 'Fira Code', monospace;
     font-size: 0.9rem;
     white-space: pre-wrap;
@@ -78,16 +78,16 @@ textarea:focus {
     margin-top: 0.5rem;
 }
 
-.vb-feedback {
+.visual-breakdown__feedback {
     margin-top: 0.75rem;
     padding-top: 0.75rem;
     border-top: 1px dashed rgba(0, 0, 0, 0.1);
     font-size: 0.85rem;
 }
 
-.err-msg     { color: #b91c1c; display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.25rem; }
-.success-msg { color: #047857; }
-.info-msg    { color: var(--secondary); font-style: italic; font-size: 0.8rem; }
+.message--error   { color: #b91c1c; display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.25rem; }
+.message--success { color: #047857; }
+.message--info    { color: var(--secondary); font-style: italic; font-size: 0.8rem; }
 
 /* === Validation Result Banner === */
 #validation-result {
@@ -97,5 +97,5 @@ textarea:focus {
     display: none;
 }
 
-.result-valid   { background-color: #d1fae5; border: 1px solid #34d399; color: #064e3b; }
-.result-invalid { background-color: #fee2e2; border: 1px solid #f87171; color: #7f1d1d; }
+.validation-result--valid   { background-color: #d1fae5; border: 1px solid #34d399; color: #064e3b; }
+.validation-result--invalid { background-color: #fee2e2; border: 1px solid #f87171; color: #7f1d1d; }

@@ -47,18 +47,18 @@ li {
 }
 
 /* === Text Utility Classes === */
-.caption-text {
+.text--caption {
     text-align: center;
     font-size: 0.9rem;
     color: var(--text-light);
 }
 
-.intro-text {
+.text--intro {
     font-size: 0.9rem;
     margin-bottom: 1.5rem;
 }
 
-.note-text {
+.text--note {
     font-size: 0.9rem;
     margin-top: 1rem;
 }

@@ -11,13 +11,16 @@
 </head>
 <body>
 
+<!-- Header Section -->
 <header>
     <div class="badge">v1.0.0</div>
     <h1>Conventional Commits</h1>
     <p>La guía definitiva para escribir mensajes de commit que humanos y máquinas puedan entender.</p>
 </header>
+<!-- /Header Section -->
 
-<div class="container">
+<!-- Main Content -->
+<main class="container">
 
     <!-- Introducción -->
     <section>
@@ -29,6 +32,7 @@
             <li>Ayudar a otros desarrolladores a entender la historia del proyecto rápidamente.</li>
         </ul>
     </section>
+    <!-- /Introducción -->
 
     <!-- SemVer Section -->
     <section>
@@ -43,10 +47,11 @@
             <span class="token v-patch" data-info="Corrección de bugs retro-compatible (fix)">PATCH</span>
         </div>
         
-        <p class="caption-text">
+        <p class="text--caption">
             Ejemplo: Si estás en la versión <strong>1.0.0</strong> y haces un commit tipo <code>feat: ...</code>, la siguiente versión será <strong>1.1.0</strong>.
         </p>
     </section>
+    <!-- /SemVer Section -->
 
     <!-- Estructura Visual -->
     <section>
@@ -61,101 +66,103 @@
             <span class="token t-desc" data-info="Breve descripción imperativa">añadir autenticación por token</span>
         </div>
 
-        <p class="caption-text">
+        <p class="text--caption">
             El cuerpo y el pie del mensaje son opcionales y van después de una línea en blanco.
         </p>
     </section>
+    <!-- /Estructura Visual -->
 
     <!-- Tipos de Commits -->
     <section>
         <h2>🏷️ Tipos de Commits</h2>
         <p>Selecciona una pestaña para ver los tipos básicos o la lista completa de la convención Angular.</p>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'basic')">Principales</button>
-            <button class="tab-btn" onclick="openTab(event, 'angular')">Convención Angular (Todos)</button>
+        <div class="tabs" role="tablist" aria-label="Tipos de commits">
+            <button id="tab-basic" class="tabs__button active" role="tab" aria-selected="true" aria-controls="basic" onclick="openTab(event, 'basic')">Principales</button>
+            <button id="tab-angular" class="tabs__button" role="tab" aria-selected="false" aria-controls="angular" onclick="openTab(event, 'angular')">Convención Angular (Todos)</button>
         </div>
 
-        <div id="basic" class="tab-content active">
+        <div id="basic" class="tabs__panel active" role="tabpanel" aria-labelledby="tab-basic">
             <div class="grid-types">
                 <!-- BREAKING CHANGE (Reordenado: 1ro) -->
                 <div class="card card--danger">
-                    <div class="card-header">
-                        <span class="card-title text-danger">BREAKING CHANGE</span>
+                    <div class="card__header">
+                        <span class="card__title text-danger">BREAKING CHANGE</span>
                         <span class="semver-tag sv-major">MAJOR</span>
                     </div>
                     <p>Un cambio que rompe la compatibilidad. Se indica con <code>!</code> después del tipo o con un pie <code>BREAKING CHANGE:</code>.</p>
-                    <code class="code-sm text-danger">feat!: drop node 12 support</code>
+                    <code class="code--small text-danger">feat!: drop node 12 support</code>
                 </div>
 
                 <!-- FEAT (Reordenado: 2do) -->
                 <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">feat</span>
+                    <div class="card__header">
+                        <span class="card__title">feat</span>
                         <span class="semver-tag sv-minor">MINOR</span>
                     </div>
                     <p>Introduce una nueva característica al código (feature). Equivale a MINOR en SemVer.</p>
-                    <code class="code-sm text-primary">feat: allow zoom on images</code>
+                    <code class="code--small text-primary">feat: allow zoom on images</code>
                 </div>
 
                 <!-- FIX (Reordenado: 3ro) -->
                 <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">fix</span>
+                    <div class="card__header">
+                        <span class="card__title">fix</span>
                         <span class="semver-tag sv-patch">PATCH</span>
                     </div>
                     <p>Arregla un error (bug) en el código. Equivale a PATCH en SemVer.</p>
-                    <code class="code-sm text-success">fix: handle null user id</code>
+                    <code class="code--small text-success">fix: handle null user id</code>
                 </div>
             </div>
         </div>
 
-        <div id="angular" class="tab-content">
-            <p class="intro-text">
+        <div id="angular" class="tabs__panel" role="tabpanel" aria-labelledby="tab-angular">
+            <p class="text--intro">
                 Aunque la especificación permite cualquier tipo, estos son los adoptados casi universalmente.
             </p>
             <div class="grid-types">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">docs</span></div>
+                    <div class="card__header"><span class="card__title">docs</span></div>
                     <p>Cambios que afectan únicamente a la documentación (archivos README, comentarios JSDoc, tutoriales), sin modificar el código funcional.</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">style</span></div>
+                    <div class="card__header"><span class="card__title">style</span></div>
                     <p>Cambios de formato que no afectan la lógica del código (espacios en blanco, indentación, puntos y coma faltantes). No confundir con estilos CSS.</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">refactor</span></div>
+                    <div class="card__header"><span class="card__title">refactor</span></div>
                     <p>Un cambio en el código de producción que no corrige errores ni añade funcionalidades, pero mejora la estructura o legibilidad.</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">perf</span></div>
+                    <div class="card__header"><span class="card__title">perf</span></div>
                     <p>Cambios dedicados específicamente a mejorar el rendimiento del sistema (optimización de algoritmos, reducción de tiempos de carga).</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">test</span></div>
+                    <div class="card__header"><span class="card__title">test</span></div>
                     <p>Adición de pruebas unitarias o de integración faltantes, o corrección de pruebas existentes que no funcionaban correctamente.</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">build</span></div>
+                    <div class="card__header"><span class="card__title">build</span></div>
                     <p>Cambios que afectan al sistema de compilación o dependencias externas (ej. npm, maven, gradle, webpack, gulp).</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">ci</span></div>
+                    <div class="card__header"><span class="card__title">ci</span></div>
                     <p>Cambios en los archivos de configuración y scripts de Integración Continua (ej. GitHub Actions, Travis, CircleCI).</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">chore</span></div>
+                    <div class="card__header"><span class="card__title">chore</span></div>
                     <p>Tareas rutinarias que no modifican el código fuente ni las pruebas (ej. actualización de versiones, tareas de mantenimiento de scripts).</p>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">revert</span></div>
+                    <div class="card__header"><span class="card__title">revert</span></div>
                     <p>Se utiliza para revertir un commit anterior. El cuerpo del mensaje suele contener el hash del commit que se está revirtiendo.</p>
                 </div>
             </div>
         </div>
     </section>
+    <!-- /Tipos de Commits -->
 
-    <!-- Ejemplos Avanzados (MOVIDO ANTES DE PRÁCTICA) -->
+    <!-- Ejemplos Avanzados -->
     <section>
         <h2>📚 Ejemplos Reales</h2>
         
@@ -172,22 +179,23 @@ Reviewed-by: J. Doe
 Refs: #456</pre>
 
         <h3>3. Breaking Change (Dos variantes para el mismo cambio)</h3>
-        <p class="note-text"><strong>Opción A (Concisa):</strong> Usando <code>!</code> en la cabecera para indicar impacto MAJOR.</p>
+        <p class="text--note"><strong>Opción A (Concisa):</strong> Usando <code>!</code> en la cabecera para indicar impacto MAJOR.</p>
         <pre>feat(api)!: cambiar estructura de respuesta de error</pre>
         
-        <p class="note-text"><strong>Opción B (Explicativa):</strong> Usando el footer <code>BREAKING CHANGE</code> cuando se necesita detalle.</p>
+        <p class="text--note"><strong>Opción B (Explicativa):</strong> Usando el footer <code>BREAKING CHANGE</code> cuando se necesita detalle.</p>
         <pre>feat(api): cambiar estructura de respuesta de error
 
 BREAKING CHANGE: la propiedad 'error' ahora devuelve un objeto en lugar de un string.</pre>
     </section>
+    <!-- /Ejemplos Avanzados -->
 
     <!-- Playground -->
     <section>
         <h2>⚡ Zona de Práctica</h2>
         <p>Prueba a escribir un mensaje completo. El validador analizará la cabecera, el cuerpo y el pie por separado.</p>
         
-        <div class="playground-area">
-            <div class="input-wrapper">
+        <div class="playground">
+            <div class="playground__input-wrapper">
                 <label for="commit-input">Redacción del Commit:</label>
                 <textarea id="commit-input" placeholder="feat(auth): add google login support
 
@@ -200,53 +208,98 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
             
             <div id="validation-result"></div>
 
-            <div id="visual-stack" class="visual-stack hidden">
+            <div id="visual-stack" class="playground__visual-stack hidden">
                 <!-- Header Card -->
-                <div id="card-header" class="vb-card neutral">
-                    <span class="vb-pill">Header</span>
-                    <div id="content-header" class="vb-content"></div>
-                    <div id="feedback-header" class="vb-feedback"></div>
+                <div id="card-header" class="visual-breakdown__card visual-breakdown__card--neutral">
+                    <span class="visual-breakdown__pill">Header</span>
+                    <div id="content-header" class="visual-breakdown__content"></div>
+                    <div id="feedback-header" class="visual-breakdown__feedback"></div>
                 </div>
 
                 <!-- Body Card -->
-                <div id="card-body" class="vb-card neutral hidden">
-                    <span class="vb-pill">Body</span>
-                    <div id="content-body" class="vb-content"></div>
-                    <div id="feedback-body" class="vb-feedback"></div>
+                <div id="card-body" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
+                    <span class="visual-breakdown__pill">Body</span>
+                    <div id="content-body" class="visual-breakdown__content"></div>
+                    <div id="feedback-body" class="visual-breakdown__feedback"></div>
                 </div>
 
                 <!-- Footer Card -->
-                <div id="card-footer" class="vb-card neutral hidden">
-                    <span class="vb-pill">Footer(s)</span>
-                    <div id="content-footer" class="vb-content"></div>
-                    <div id="feedback-footer" class="vb-feedback"></div>
+                <div id="card-footer" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
+                    <span class="visual-breakdown__pill">Footer(s)</span>
+                    <div id="content-footer" class="visual-breakdown__content"></div>
+                    <div id="feedback-footer" class="visual-breakdown__feedback"></div>
                 </div>
             </div>
         </div>
     </section>
+    <!-- /Playground -->
 
-</div>
+</main>
+<!-- /Main Content -->
 
+<!-- Footer Section -->
 <footer>
-    <p>Construido para educar sobre <a href="https://www.conventionalcommits.org/" target="_blank">Conventional Commits</a>.</p>
+    <p>Construido para educar sobre <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener noreferrer">Conventional Commits</a>.</p>
 </footer>
+<!-- /Footer Section -->
 
 <script>
     function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-            tabcontent[i].classList.remove("active");
+        const tabPanels = document.getElementsByClassName("tabs__panel");
+        const tabButtons = document.getElementsByClassName("tabs__button");
+        
+        // Hide all panels and deactivate buttons
+        for (let i = 0; i < tabPanels.length; i++) {
+            tabPanels[i].style.display = "none";
+            tabPanels[i].classList.remove("active");
         }
-        tablinks = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("active");
+            tabButtons[i].setAttribute("aria-selected", "false");
         }
+        
+        // Show selected panel and activate button
         document.getElementById(tabName).style.display = "block";
         setTimeout(() => document.getElementById(tabName).classList.add("active"), 10);
-        evt.currentTarget.className += " active";
+        evt.currentTarget.classList.add("active");
+        evt.currentTarget.setAttribute("aria-selected", "true");
     }
+
+    // --- Keyboard Navigation for Tabs ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const tablist = document.querySelector('[role="tablist"]');
+        const tabs = tablist.querySelectorAll('[role="tab"]');
+        
+        tablist.addEventListener('keydown', (e) => {
+            const currentIndex = Array.from(tabs).indexOf(document.activeElement);
+            let newIndex;
+            
+            switch (e.key) {
+                case 'ArrowLeft':
+                    newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+                    tabs[newIndex].focus();
+                    tabs[newIndex].click();
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
+                    tabs[newIndex].focus();
+                    tabs[newIndex].click();
+                    e.preventDefault();
+                    break;
+                case 'Home':
+                    tabs[0].focus();
+                    tabs[0].click();
+                    e.preventDefault();
+                    break;
+                case 'End':
+                    tabs[tabs.length - 1].focus();
+                    tabs[tabs.length - 1].click();
+                    e.preventDefault();
+                    break;
+            }
+        });
+    });
 
     // --- Lógica del Validador ---
     const input = document.getElementById('commit-input');
@@ -325,7 +378,7 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
         
         if (headerRegex.test(header)) {
             headerValid = true;
-            cardHeader.className = 'vb-card valid';
+            cardHeader.className = 'visual-breakdown__card visual-breakdown__card--valid';
             
             const parts = header.split(':');
             const prefix = parts[0];
@@ -335,9 +388,9 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
             if (isBreakingHeader || hasBreakingFooter) {
                 semVerHtml = '<span class="semver-tag sv-major">MAJOR</span>';
                 if (hasBreakingFooter && !isBreakingHeader) {
-                    headerNote = '<div class="info-msg">ℹ️ Impacto elevado a MAJOR debido a <code>BREAKING CHANGE</code> en footer.</div>';
+                    headerNote = '<div class="message--info">ℹ️ Impacto elevado a MAJOR debido a <code>BREAKING CHANGE</code> en footer.</div>';
                 } else if (isBreakingHeader) {
-                    headerNote = '<div class="info-msg">ℹ️ Impacto MAJOR indicado por <code>!</code>.</div>';
+                    headerNote = '<div class="message--info">ℹ️ Impacto MAJOR indicado por <code>!</code>.</div>';
                 }
             } else if (prefix.startsWith('feat')) {
                 semVerHtml = '<span class="semver-tag sv-minor">MINOR</span>';
@@ -346,10 +399,10 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
             } else {
                 semVerHtml = '<span class="semver-tag sv-none">NO RELEASE</span>';
             }
-            fbHeader.innerHTML = `<div class="success-msg">✅ Formato correcto. Impacto: ${semVerHtml}</div>${headerNote}`;
+            fbHeader.innerHTML = `<div class="message--success">✅ Formato correcto. Impacto: ${semVerHtml}</div>${headerNote}`;
         } else {
-            cardHeader.className = 'vb-card error';
-            fbHeader.innerHTML = '<div class="err-msg">❌ El formato debe ser: <code>tipo(scope): descripción</code></div>';
+            cardHeader.className = 'visual-breakdown__card visual-breakdown__card--error';
+            fbHeader.innerHTML = '<div class="message--error">❌ El formato debe ser: <code>tipo(scope): descripción</code></div>';
         }
 
         // --- 2. SEPARATE BODY AND FOOTER ---
@@ -388,18 +441,18 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
             if (bodyText === '') {
                 if (bodyErrors.length > 0) {
                      // Empty body visually but error exist (e.g. missing blank line led to empty body logic, or just header\ncontent)
-                     cardBody.className = 'vb-card error';
-                     fbBody.innerHTML = bodyErrors.map(e => `<div class="err-msg">❌ ${e}</div>`).join('');
+                     cardBody.className = 'visual-breakdown__card visual-breakdown__card--error';
+                     fbBody.innerHTML = bodyErrors.map(e => `<div class="message--error">❌ ${e}</div>`).join('');
                 } else {
                      cardBody.style.display = 'none';
                 }
             } else {
                 if (bodyErrors.length > 0) {
-                    cardBody.className = 'vb-card error';
-                    fbBody.innerHTML = bodyErrors.map(e => `<div class="err-msg">❌ ${e}</div>`).join('');
+                    cardBody.className = 'visual-breakdown__card visual-breakdown__card--error';
+                    fbBody.innerHTML = bodyErrors.map(e => `<div class="message--error">❌ ${e}</div>`).join('');
                 } else {
-                    cardBody.className = 'vb-card valid';
-                    fbBody.innerHTML = '<div class="success-msg">✅ Cuerpo válido.</div>';
+                    cardBody.className = 'visual-breakdown__card visual-breakdown__card--valid';
+                    fbBody.innerHTML = '<div class="message--success">✅ Cuerpo válido.</div>';
                 }
             }
         } else {
@@ -449,12 +502,12 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
             });
 
             if (footerErrors.length > 0) {
-                cardFooter.className = 'vb-card error';
-                fbFooter.innerHTML = footerErrors.map(e => `<div class="err-msg">❌ ${e}</div>`).join('');
+                cardFooter.className = 'visual-breakdown__card visual-breakdown__card--error';
+                fbFooter.innerHTML = footerErrors.map(e => `<div class="message--error">❌ ${e}</div>`).join('');
             } else {
-                cardFooter.className = 'vb-card valid';
+                cardFooter.className = 'visual-breakdown__card visual-breakdown__card--valid';
                 let extra = hasBreakingFooter ? ' <b>(Incluye BREAKING CHANGE)</b>' : '';
-                fbFooter.innerHTML = `<div class="success-msg">✅ Footer(s) válido(s).${extra}</div>`;
+                fbFooter.innerHTML = `<div class="message--success">✅ Footer(s) válido(s).${extra}</div>`;
             }
 
         } else {
@@ -466,10 +519,10 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
 
         if (globalValid) {
             resultBox.innerHTML = '✅ <strong>Mensaje Válido</strong> según la especificación.';
-            resultBox.className = 'result-valid';
+            resultBox.className = 'validation-result--valid';
         } else {
             resultBox.innerHTML = '⚠️ <strong>Hay errores</strong> en el formato. Revisa las tarjetas abajo.';
-            resultBox.className = 'result-invalid';
+            resultBox.className = 'validation-result--invalid';
         }
     });
 </script>
