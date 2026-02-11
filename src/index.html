@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Conventional Commits</title>
+    <!-- Importamos una fuente moderna para mejorar la legibilidad -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Paleta de colores moderna y profesional */
+            --primary: #2563eb;       /* Azul vibrante */
+            --primary-dark: #1e40af;
+            --secondary: #475569;     /* Gris azulado */
+            --accent: #f59e0b;        /* Ámbar para advertencias/notable */
+            --danger: #ef4444;        /* Rojo para errores/breaking */
+            --success: #10b981;       /* Verde para éxito */
+            --background: #f8fafc;    /* Fondo muy claro */
+            --surface: #ffffff;       /* Fondo de tarjetas */
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --code-bg: #1e293b;       /* Fondo oscuro para código */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+        }
+
+        /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 4rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9); /* Corrección: Color explícito para sobreescribir el gris global */
+            max-width: 650px;
+            margin: 1rem auto 0;
+            font-weight: 300;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        /* --- Contenedor Principal --- */
+        .container {
+            max-width: 1000px;
+            margin: -2rem auto 2rem; /* Superposición ligera sobre el header */
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Secciones --- */
+        section {
+            background: var(--surface);
+            margin-bottom: 2rem;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin-top: 0;
+            font-size: 1.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 2rem;
+            font-size: 1.1rem;
+        }
+
+        p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            color: var(--text-light);
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Estructura Visual Interactiva (Anatomía y SemVer) --- */
+        .structure-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-family: 'Fira Code', monospace;
+            background: #f1f5f9;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .token {
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .token:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Tooltip simple con CSS */
+        .token::after {
+            content: attr(data-info);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-main);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            font-family: 'Inter', sans-serif;
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .token:hover::after {
+            opacity: 1;
+        }
+
+        /* Colores Anatomía */
+        .t-type { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+        .t-scope { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+        .t-bang { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        .t-desc { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+        .t-colon { color: var(--text-light); font-weight: bold; }
+
+        /* Colores SemVer */
+        .v-major { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; font-size: 1.5rem; font-weight: bold; }
+        .v-minor { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; font-size: 1.5rem; font-weight: bold; }
+        .v-patch { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; font-size: 1.5rem; font-weight: bold; }
+        .v-dot   { font-size: 1.5rem; color: var(--text-light); font-weight: bold; }
+
+        /* --- Tabs System --- */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- Grid de Tipos --- */
+        .grid-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Fira Code', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+        }
+
+        .card p {
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .semver-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .sv-major { background: #fee2e2; color: #991b1b; }
+        .sv-minor { background: #dbeafe; color: #1e40af; }
+        .sv-patch { background: #d1fae5; color: #065f46; }
+        .sv-none { background: #f1f5f9; color: #64748b; }
+
+        /* --- Code Snippets --- */
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .plain { color: #abb2bf; }
+
+        /* --- Playground Interactivo --- */
+        .playground-area {
+            background: linear-gradient(to right, #f8fafc, #ffffff);
+            border: 2px dashed #cbd5e1;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .input-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.2s;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* --- Visual Breakdown Style --- */
+        .visual-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .vb-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.25rem;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .vb-card.valid { border-left: 4px solid var(--success); }
+        .vb-card.error { border-left: 4px solid var(--danger); border-color: #fee2e2; background: #fff5f5; }
+        .vb-card.neutral { border-left: 4px solid #cbd5e1; }
+
+        .vb-pill {
+            position: absolute;
+            top: 0.75rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--text-light);
+            background: #f1f5f9;
+        }
+
+        .vb-content {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            color: var(--text-main);
+            margin-top: 0.5rem;
+        }
+
+        .vb-feedback {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+        }
+
+        .err-msg { color: #b91c1c; display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.25rem; }
+        .success-msg { color: #047857; }
+        .info-msg { color: var(--secondary); font-style: italic; font-size: 0.8rem;}
+
+        #validation-result {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-valid { background-color: #d1fae5; border: 1px solid #34d399; color: #064e3b; }
+        .result-invalid { background-color: #fee2e2; border: 1px solid #f87171; color: #7f1d1d; }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="badge">v1.0.0</div>
+    <h1>Conventional Commits</h1>
+    <p>La guía definitiva para escribir mensajes de commit que humanos y máquinas puedan entender.</p>
+</header>
+
+<div class="container">
+
+    <!-- Introducción -->
+    <section>
+        <h2>💡 ¿Por qué es importante?</h2>
+        <p>Escribir un mensaje de commit desordenado es fácil, pero mantener un proyecto a largo plazo no lo es. Conventional Commits ofrece una estructura ligera que permite:</p>
+        <ul>
+            <li>Generar <strong>CHANGELOGs</strong> automáticamente.</li>
+            <li>Determinar el siguiente número de versión semántica (<strong>SemVer</strong>) sin intervención humana.</li>
+            <li>Ayudar a otros desarrolladores a entender la historia del proyecto rápidamente.</li>
+        </ul>
+    </section>
+
+    <!-- SemVer Section -->
+    <section>
+        <h2>🚀 Semantic Versioning (SemVer)</h2>
+        <p>Conventional Commits y SemVer van de la mano. La estructura de tu commit dicta cómo debe incrementar la versión de tu software.</p>
+        
+        <div class="structure-display">
+            <span class="token v-major" data-info="Cambios incompatibles en API (BREAKING CHANGE)">MAJOR</span>
+            <span class="v-dot">.</span>
+            <span class="token v-minor" data-info="Nueva funcionalidad retro-compatible (feat)">MINOR</span>
+            <span class="v-dot">.</span>
+            <span class="token v-patch" data-info="Corrección de bugs retro-compatible (fix)">PATCH</span>
+        </div>
+        
+        <p style="text-align: center; font-size: 0.9rem; color: var(--text-light);">
+            Ejemplo: Si estás en la versión <strong>1.0.0</strong> y haces un commit tipo <code>feat: ...</code>, la siguiente versión será <strong>1.1.0</strong>.
+        </p>
+    </section>
+
+    <!-- Estructura Visual -->
+    <section>
+        <h2>🧩 Anatomía del Mensaje</h2>
+        <p>Pasa el ratón por encima de los componentes para entender su función.</p>
+        
+        <div class="structure-display">
+            <span class="token t-type" data-info="Tipo de cambio (ej: feat, fix)">feat</span>
+            <span class="token t-scope" data-info="(Opcional) Módulo afectado">(api)</span>
+            <span class="token t-bang" data-info="(Opcional) Breaking Change">!</span>
+            <span class="token t-colon">:</span>
+            <span class="token t-desc" data-info="Breve descripción imperativa">añadir autenticación por token</span>
+        </div>
+
+        <p style="text-align: center; font-size: 0.9rem; color: var(--text-light);">
+            El cuerpo y el pie del mensaje son opcionales y van después de una línea en blanco.
+        </p>
+    </section>
+
+    <!-- Tipos de Commits -->
+    <section>
+        <h2>🏷️ Tipos de Commits</h2>
+        <p>Selecciona una pestaña para ver los tipos básicos o la lista completa de la convención Angular.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'basic')">Principales</button>
+            <button class="tab-btn" onclick="openTab(event, 'angular')">Convención Angular (Todos)</button>
+        </div>
+
+        <div id="basic" class="tab-content active">
+            <div class="grid-types">
+                <!-- BREAKING CHANGE (Reordenado: 1ro) -->
+                <div class="card" style="border-color: var(--danger);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--danger);">BREAKING CHANGE</span>
+                        <span class="semver-tag sv-major">MAJOR</span>
+                    </div>
+                    <p>Un cambio que rompe la compatibilidad. Se indica con <code>!</code> después del tipo o con un pie <code>BREAKING CHANGE:</code>.</p>
+                    <code style="font-size: 0.8rem; color: var(--danger);">feat!: drop node 12 support</code>
+                </div>
+
+                <!-- FEAT (Reordenado: 2do) -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">feat</span>
+                        <span class="semver-tag sv-minor">MINOR</span>
+                    </div>
+                    <p>Introduce una nueva característica al código (feature). Equivale a MINOR en SemVer.</p>
+                    <code style="font-size: 0.8rem; color: var(--primary);">feat: allow zoom on images</code>
+                </div>
+
+                <!-- FIX (Reordenado: 3ro) -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">fix</span>
+                        <span class="semver-tag sv-patch">PATCH</span>
+                    </div>
+                    <p>Arregla un error (bug) en el código. Equivale a PATCH en SemVer.</p>
+                    <code style="font-size: 0.8rem; color: var(--success);">fix: handle null user id</code>
+                </div>
+            </div>
+        </div>
+
+        <div id="angular" class="tab-content">
+            <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Aunque la especificación permite cualquier tipo, estos son los adoptados casi universalmente.
+            </p>
+            <div class="grid-types">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">docs</span></div>
+                    <p>Cambios que afectan únicamente a la documentación (archivos README, comentarios JSDoc, tutoriales), sin modificar el código funcional.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">style</span></div>
+                    <p>Cambios de formato que no afectan la lógica del código (espacios en blanco, indentación, puntos y coma faltantes). No confundir con estilos CSS.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">refactor</span></div>
+                    <p>Un cambio en el código de producción que no corrige errores ni añade funcionalidades, pero mejora la estructura o legibilidad.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">perf</span></div>
+                    <p>Cambios dedicados específicamente a mejorar el rendimiento del sistema (optimización de algoritmos, reducción de tiempos de carga).</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">test</span></div>
+                    <p>Adición de pruebas unitarias o de integración faltantes, o corrección de pruebas existentes que no funcionaban correctamente.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">build</span></div>
+                    <p>Cambios que afectan al sistema de compilación o dependencias externas (ej. npm, maven, gradle, webpack, gulp).</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">ci</span></div>
+                    <p>Cambios en los archivos de configuración y scripts de Integración Continua (ej. GitHub Actions, Travis, CircleCI).</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">chore</span></div>
+                    <p>Tareas rutinarias que no modifican el código fuente ni las pruebas (ej. actualización de versiones, tareas de mantenimiento de scripts).</p>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">revert</span></div>
+                    <p>Se utiliza para revertir un commit anterior. El cuerpo del mensaje suele contener el hash del commit que se está revirtiendo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ejemplos Avanzados (MOVIDO ANTES DE PRÁCTICA) -->
+    <section>
+        <h2>📚 Ejemplos Reales</h2>
+        
+        <h3>1. Commit básico con tipo y ámbito</h3>
+        <pre>feat(ui): agregar botón de modo oscuro</pre>
+
+        <h3>2. Commit completo con cuerpo y múltiples pies</h3>
+        <pre>fix: corrección de validación de usuarios
+
+Se ha actualizado la lógica para permitir caracteres especiales en nombres.
+Esto soluciona el problema reportado por soporte.
+
+Reviewed-by: J. Doe
+Refs: #456</pre>
+
+        <h3>3. Breaking Change (Dos variantes para el mismo cambio)</h3>
+        <p style="font-size: 0.9rem; margin-top:1rem;"><strong>Opción A (Concisa):</strong> Usando <code>!</code> en la cabecera para indicar impacto MAJOR.</p>
+        <pre>feat(api)!: cambiar estructura de respuesta de error</pre>
+        
+        <p style="font-size: 0.9rem; margin-top:1rem;"><strong>Opción B (Explicativa):</strong> Usando el footer <code>BREAKING CHANGE</code> cuando se necesita detalle.</p>
+        <pre>feat(api): cambiar estructura de respuesta de error
+
+BREAKING CHANGE: la propiedad 'error' ahora devuelve un objeto en lugar de un string.</pre>
+    </section>
+
+    <!-- Playground -->
+    <section>
+        <h2>⚡ Zona de Práctica</h2>
+        <p>Prueba a escribir un mensaje completo. El validador analizará la cabecera, el cuerpo y el pie por separado.</p>
+        
+        <div class="playground-area">
+            <div class="input-wrapper">
+                <label for="commit-input">Redacción del Commit:</label>
+                <textarea id="commit-input" placeholder="feat(auth): add google login support
+
+This adds the ability to login with google.
+We needed to update the user schema.
+
+Reviewed-by: J. Doe
+BREAKING CHANGE: login api v1 is removed"></textarea>
+            </div>
+            
+            <div id="validation-result"></div>
+
+            <div id="visual-stack" class="visual-stack" style="display: none;">
+                <!-- Header Card -->
+                <div id="card-header" class="vb-card neutral">
+                    <span class="vb-pill">Header</span>
+                    <div id="content-header" class="vb-content"></div>
+                    <div id="feedback-header" class="vb-feedback"></div>
+                </div>
+
+                <!-- Body Card -->
+                <div id="card-body" class="vb-card neutral" style="display:none">
+                    <span class="vb-pill">Body</span>
+                    <div id="content-body" class="vb-content"></div>
+                    <div id="feedback-body" class="vb-feedback"></div>
+                </div>
+
+                <!-- Footer Card -->
+                <div id="card-footer" class="vb-card neutral" style="display:none">
+                    <span class="vb-pill">Footer(s)</span>
+                    <div id="content-footer" class="vb-content"></div>
+                    <div id="feedback-footer" class="vb-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>Construido para educar sobre <a href="https://www.conventionalcommits.org/" target="_blank">Conventional Commits</a>.</p>
+</footer>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        setTimeout(() => document.getElementById(tabName).classList.add("active"), 10);
+        evt.currentTarget.className += " active";
+    }
+
+    // --- Lógica del Validador ---
+    const input = document.getElementById('commit-input');
+    const resultBox = document.getElementById('validation-result');
+    const visualStack = document.getElementById('visual-stack');
+    
+    // Cards
+    const cardHeader = document.getElementById('card-header');
+    const cardBody = document.getElementById('card-body');
+    const cardFooter = document.getElementById('card-footer');
+    
+    // Content Areas
+    const contentHeader = document.getElementById('content-header');
+    const contentBody = document.getElementById('content-body');
+    const contentFooter = document.getElementById('content-footer');
+    
+    // Feedback Areas
+    const fbHeader = document.getElementById('feedback-header');
+    const fbBody = document.getElementById('feedback-body');
+    const fbFooter = document.getElementById('feedback-footer');
+
+    // Regex
+    const headerRegex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9\-_]+\))?(!)?:\s.+$/;
+    
+    input.addEventListener('input', (e) => {
+        const text = e.target.value;
+        if (text.trim() === '') {
+            resultBox.style.display = 'none';
+            visualStack.style.display = 'none';
+            return;
+        }
+
+        resultBox.style.display = 'block';
+        visualStack.style.display = 'flex';
+        
+        const lines = text.split('\n');
+        
+        // --- PRE-ANALYSIS: DETECT FOOTER TOKENS ---
+        let hasBreakingFooter = false;
+        let footerStartIndex = -1;
+
+        if (lines.length > 1) {
+            let lastBlankIndex = -1;
+            for (let i = lines.length - 1; i > 0; i--) {
+                if (lines[i].trim() === '') {
+                    lastBlankIndex = i;
+                    break;
+                }
+            }
+
+            if (lastBlankIndex !== -1 && lastBlankIndex < lines.length - 1) {
+                const potentialFooterStart = lines[lastBlankIndex + 1];
+                // CAMBIO AQUI: Regex más permisivo para detección (permite espacios en el token)
+                // Esto permite que 'Created by: ...' se detecte como footer, y luego el validador marque el error de espacio.
+                const footerStartRegex = /^(BREAKING CHANGE|BREAKING-CHANGE|[\w\s-]+)(: | #)/;
+                if (footerStartRegex.test(potentialFooterStart)) {
+                    footerStartIndex = lastBlankIndex + 1;
+                    
+                    // Preliminary check to see if we have a Breaking Change in footer
+                    // We iterate potential footer lines to set flags for header analysis
+                    const potentialFooterLines = lines.slice(footerStartIndex);
+                    potentialFooterLines.forEach(l => {
+                        if (/^BREAKING[- ]CHANGE(: | #)/.test(l)) hasBreakingFooter = true;
+                    });
+                }
+            }
+        }
+
+        // --- 1. HEADER VALIDATION ---
+        const header = lines[0];
+        contentHeader.textContent = header;
+        
+        let headerValid = false;
+        let semVerHtml = '';
+        let headerNote = '';
+        
+        if (headerRegex.test(header)) {
+            headerValid = true;
+            cardHeader.className = 'vb-card valid';
+            
+            const parts = header.split(':');
+            const prefix = parts[0];
+            const isBreakingHeader = prefix.includes('!');
+            
+            // Logic for SemVer Impact
+            if (isBreakingHeader || hasBreakingFooter) {
+                semVerHtml = '<span class="semver-tag sv-major">MAJOR</span>';
+                if (hasBreakingFooter && !isBreakingHeader) {
+                    headerNote = '<div class="info-msg">ℹ️ Impacto elevado a MAJOR debido a <code>BREAKING CHANGE</code> en footer.</div>';
+                } else if (isBreakingHeader) {
+                    headerNote = '<div class="info-msg">ℹ️ Impacto MAJOR indicado por <code>!</code>.</div>';
+                }
+            } else if (prefix.startsWith('feat')) {
+                semVerHtml = '<span class="semver-tag sv-minor">MINOR</span>';
+            } else if (prefix.startsWith('fix')) {
+                semVerHtml = '<span class="semver-tag sv-patch">PATCH</span>';
+            } else {
+                semVerHtml = '<span class="semver-tag sv-none">NO RELEASE</span>';
+            }
+            fbHeader.innerHTML = `<div class="success-msg">✅ Formato correcto. Impacto: ${semVerHtml}</div>${headerNote}`;
+        } else {
+            cardHeader.className = 'vb-card error';
+            fbHeader.innerHTML = '<div class="err-msg">❌ El formato debe ser: <code>tipo(scope): descripción</code></div>';
+        }
+
+        // --- 2. SEPARATE BODY AND FOOTER ---
+        let bodyLines = [];
+        let footerLines = [];
+        
+        if (footerStartIndex !== -1) {
+            bodyLines = lines.slice(1, footerStartIndex - 1); // exclude blank line
+            footerLines = lines.slice(footerStartIndex);
+        } else {
+            bodyLines = lines.slice(1);
+        }
+
+        // --- 3. BODY VALIDATION ---
+        let bodyErrors = [];
+        
+        if (lines.length > 1) {
+            cardBody.style.display = 'block';
+            const bodyText = bodyLines.join('\n').trim();
+            contentBody.textContent = bodyText;
+            
+            // Rule: Blank line after header
+            if (lines[1].trim() !== '') {
+                bodyErrors.push("Falta una línea en blanco entre la cabecera y el cuerpo.");
+            }
+
+            // Check for misplaced BREAKING CHANGE in body
+            if (/^BREAKING CHANGE:/m.test(bodyText)) {
+                if (hasBreakingFooter) {
+                    bodyErrors.push("Detectado 'BREAKING CHANGE' en el cuerpo y también en el footer. ¿Es un duplicado? Si es distinto, asegúrate de separarlo con líneas en blanco.");
+                } else {
+                    bodyErrors.push("Parece que tienes un 'BREAKING CHANGE' pegado al cuerpo. Debes dejar una línea en blanco antes para que sea un footer válido.");
+                }
+            }
+
+            if (bodyText === '') {
+                if (bodyErrors.length > 0) {
+                     // Empty body visually but error exist (e.g. missing blank line led to empty body logic, or just header\ncontent)
+                     cardBody.className = 'vb-card error';
+                     fbBody.innerHTML = bodyErrors.map(e => `<div class="err-msg">❌ ${e}</div>`).join('');
+                } else {
+                     cardBody.style.display = 'none';
+                }
+            } else {
+                if (bodyErrors.length > 0) {
+                    cardBody.className = 'vb-card error';
+                    fbBody.innerHTML = bodyErrors.map(e => `<div class="err-msg">❌ ${e}</div>`).join('');
+                } else {
+                    cardBody.className = 'vb-card valid';
+                    fbBody.innerHTML = '<div class="success-msg">✅ Cuerpo válido.</div>';
+                }
+            }
+        } else {
+            cardBody.style.display = 'none';
+        }
+
+        // --- 4. FOOTER VALIDATION ---
+        let footerErrors = [];
+
+        if (footerLines.length > 0) {
+            cardFooter.style.display = 'block';
+            contentFooter.textContent = footerLines.join('\n');
+            
+            footerLines.forEach(line => {
+                if (line.trim() === '') return;
+                const tokenMatch = line.match(/^([^#:]+)(: | #)(.*)/);
+                
+                if (tokenMatch) {
+                    const token = tokenMatch[1];
+                    const separator = tokenMatch[2]; // Capture separator ": " or " #"
+                    const value = tokenMatch[3];
+
+                    if (token === 'BREAKING CHANGE' || token === 'BREAKING-CHANGE') {
+                        // VALIDACIÓN ESTRICTA PARA BREAKING CHANGE
+                        if (separator !== ': ') {
+                            footerErrors.push(`Un footer de <code>BREAKING CHANGE</code> debe usar exactamente dos puntos y espacio (<code>: </code>) como separador.`);
+                        } else if (!value || value.trim() === '') {
+                            footerErrors.push(`Un footer de <code>BREAKING CHANGE</code> debe tener una descripción.`);
+                        }
+                    } else {
+                        // VALIDACIÓN PARA OTROS TOKENS
+                        if (/\s/.test(token)) {
+                            if (token.toUpperCase() === 'BREAKING CHANGE') {
+                                footerErrors.push(`El token '${token}' debe estar en MAYÚSCULAS: <code>BREAKING CHANGE</code>.`);
+                            } else if (token.toUpperCase() === 'BREAKING CHANGES') {
+                                footerErrors.push(`El token '${token}' es incorrecto. Usa <code>BREAKING CHANGE</code> (singular).`);
+                            } else {
+                                footerErrors.push(`El token '${token}' no debe contener espacios (usa guiones, ej: <code>Reviewed-by</code>).`);
+                            }
+                        }
+                    }
+                } else {
+                    if (line === footerLines[0]) {
+                        footerErrors.push(`La línea '${line}' no parece un footer válido (Formato: <code>Token: valor</code>).`);
+                    }
+                }
+            });
+
+            if (footerErrors.length > 0) {
+                cardFooter.className = 'vb-card error';
+                fbFooter.innerHTML = footerErrors.map(e => `<div class="err-msg">❌ ${e}</div>`).join('');
+            } else {
+                cardFooter.className = 'vb-card valid';
+                let extra = hasBreakingFooter ? ' <b>(Incluye BREAKING CHANGE)</b>' : '';
+                fbFooter.innerHTML = `<div class="success-msg">✅ Footer(s) válido(s).${extra}</div>`;
+            }
+
+        } else {
+            cardFooter.style.display = 'none';
+        }
+
+        // Final Global Status
+        const globalValid = headerValid && bodyErrors.length === 0 && footerErrors.length === 0;
+
+        if (globalValid) {
+            resultBox.innerHTML = '✅ <strong>Mensaje Válido</strong> según la especificación.';
+            resultBox.className = 'result-valid';
+        } else {
+            resultBox.innerHTML = '⚠️ <strong>Hay errores</strong> en el formato. Revisa las tarjetas abajo.';
+            resultBox.className = 'result-invalid';
+        }
+    });
+</script>
+
+</body>
+</html>
