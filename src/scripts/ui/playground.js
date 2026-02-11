@@ -17,6 +17,7 @@ import {
     updateResultBox
 } from './feedback.js';
 import { setVisible } from '../utils/helpers.js';
+import { t } from '../i18n/i18n.js';
 
 /**
  * DOM element references for the playground
@@ -60,15 +61,15 @@ const handleHeaderValidation = (parsed) => {
     if (result.isValid) {
         setCardStatus(cardHeader, CardStatus.VALID);
         
-        let feedbackHtml = `Formato correcto. Impacto: ${getSemVerTag(result.semVerImpact)}`;
+        let feedbackHtml = `${t('validation.header.valid')} ${getSemVerTag(result.semVerImpact)}`;
         renderSuccessWithHtml(fbHeader, feedbackHtml);
         
         // Add info notes about breaking changes
         if (result.semVerImpact === 'MAJOR') {
             if (hasBreakingFooter && !result.hasBreakingIndicator) {
-                renderInfoWithHtml(fbHeader, 'Impacto elevado a MAJOR debido a <code>BREAKING CHANGE</code> en footer.');
+                renderInfoWithHtml(fbHeader, t('validation.header.majorByFooter'));
             } else if (result.hasBreakingIndicator) {
-                renderInfoWithHtml(fbHeader, 'Impacto MAJOR indicado por <code>!</code>.');
+                renderInfoWithHtml(fbHeader, t('validation.header.majorByBang'));
             }
         }
     } else {
@@ -105,7 +106,7 @@ const handleBodyValidation = (parsed) => {
         renderErrors(fbBody, result.errors);
     } else {
         setCardStatus(cardBody, CardStatus.VALID);
-        renderSuccess(fbBody, 'Cuerpo válido.');
+        renderSuccess(fbBody, t('validation.body.valid'));
     }
 
     return result;
@@ -134,8 +135,8 @@ const handleFooterValidation = (parsed) => {
         renderErrors(fbFooter, result.errors);
     } else {
         setCardStatus(cardFooter, CardStatus.VALID);
-        const extra = hasBreakingFooter ? ' <b>(Incluye BREAKING CHANGE)</b>' : '';
-        renderSuccessWithHtml(fbFooter, `Footer(s) válido(s).${extra}`);
+        const extra = hasBreakingFooter ? t('validation.footer.hasBreaking') : '';
+        renderSuccessWithHtml(fbFooter, `${t('validation.footer.valid')}${extra}`);
     }
 
     return result;

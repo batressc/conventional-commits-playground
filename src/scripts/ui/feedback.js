@@ -5,6 +5,7 @@
  */
 
 import { escapeHtml } from '../utils/helpers.js';
+import { t } from '../i18n/i18n.js';
 
 /**
  * Card status types
@@ -28,14 +29,21 @@ export const setCardStatus = (card, status) => {
 /**
  * Renders error messages to a feedback container
  * @param {HTMLElement} container - The feedback container element
- * @param {string[]} errors - Array of error messages (plain text, will be escaped)
+ * @param {string[]} errors - Array of error keys (will be translated automatically)
  */
 export const renderErrors = (container, errors) => {
     container.innerHTML = '';
-    errors.forEach(error => {
+    errors.forEach(errorKey => {
         const div = document.createElement('div');
         div.className = 'message--error';
-        div.textContent = `❌ ${error}`;
+        const translatedError = t(errorKey);
+        
+        // Check if translation contains HTML tags
+        if (/<\/?[a-z][\s\S]*>/i.test(translatedError)) {
+            div.innerHTML = `❌ ${translatedError}`;
+        } else {
+            div.textContent = `❌ ${translatedError}`;
+        }
         container.appendChild(div);
     });
 };
@@ -98,19 +106,17 @@ export const getSemVerTag = (impact) => {
 export const updateResultBox = (resultBox, isValid) => {
     resultBox.innerHTML = '';
     const icon = isValid ? '✅' : '⚠️';
-    const text = isValid ? 'Mensaje Válido según la especificación.' : 'Hay errores en el formato. Revisa las tarjetas abajo.';
-    const strongText = isValid ? 'Mensaje Válido' : 'Hay errores';
+    const strongText = isValid ? t('validation.result.valid') : t('validation.result.invalid');
+    const description = isValid ? t('validation.result.validDescription') : t('validation.result.invalidDescription');
     
     const iconText = document.createTextNode(`${icon} `);
     const strong = document.createElement('strong');
     strong.textContent = strongText;
-    const remainingText = document.createTextNode(text.substring(strongText.length));
+    const descText = document.createTextNode(description);
     
     resultBox.appendChild(iconText);
     resultBox.appendChild(strong);
-    if (text.length > strongText.length) {
-        resultBox.appendChild(remainingText);
-    }
+    resultBox.appendChild(descText);
     resultBox.className = isValid ? 'validation-result--valid' : 'validation-result--invalid';
 };
 

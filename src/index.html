@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Interactiva: Conventional Commits</title>
+    <title>Interactive Guide: Conventional Commits</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <!-- Styles -->
@@ -13,9 +13,17 @@
 
 <!-- Header Section -->
 <header>
-    <div class="badge">v1.0.0</div>
-    <h1>Conventional Commits</h1>
-    <p>La guía definitiva para escribir mensajes de commit que humanos y máquinas puedan entender.</p>
+    <div class="language-switcher">
+        <button class="lang-btn lang-btn--active" data-lang="en" aria-label="English" aria-pressed="true" title="English">
+            🇺🇸 EN
+        </button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" aria-pressed="false" title="Español">
+            🇸🇻 ES
+        </button>
+    </div>
+    <div class="badge" data-i18n-key="header.badge">v1.0.0</div>
+    <h1 data-i18n-key="header.title">Conventional Commits</h1>
+    <p data-i18n-key="header.subtitle">The definitive guide to writing commit messages that both humans and machines can understand.</p>
 </header>
 <!-- /Header Section -->
 
@@ -24,62 +32,62 @@
 
     <!-- Introducción -->
     <section>
-        <h2>💡 ¿Por qué es importante?</h2>
-        <p>Escribir un mensaje de commit desordenado es fácil, pero mantener un proyecto a largo plazo no lo es. Conventional Commits ofrece una estructura ligera que permite:</p>
+        <h2 data-i18n-key="intro.title">💡 Why is it important?</h2>
+        <p data-i18n-key="intro.description">Writing a messy commit message is easy, but maintaining a project long-term is not. Conventional Commits offers a lightweight structure that allows:</p>
         <ul>
-            <li>Generar <strong>CHANGELOGs</strong> automáticamente.</li>
-            <li>Determinar el siguiente número de versión semántica (<strong>SemVer</strong>) sin intervención humana.</li>
-            <li>Ayudar a otros desarrolladores a entender la historia del proyecto rápidamente.</li>
+            <li data-i18n-key="intro.benefits.changelog">Generate <strong>CHANGELOGs</strong> automatically.</li>
+            <li data-i18n-key="intro.benefits.semver">Determine the next semantic version number (<strong>SemVer</strong>) without human intervention.</li>
+            <li data-i18n-key="intro.benefits.history">Help other developers understand the project history quickly.</li>
         </ul>
     </section>
     <!-- /Introducción -->
 
     <!-- SemVer Section -->
     <section>
-        <h2>🚀 Semantic Versioning (SemVer)</h2>
-        <p>Conventional Commits y SemVer van de la mano. La estructura de tu commit dicta cómo debe incrementar la versión de tu software.</p>
+        <h2 data-i18n-key="semver.title">🚀 Semantic Versioning (SemVer)</h2>
+        <p data-i18n-key="semver.description">Conventional Commits and SemVer go hand in hand. The structure of your commit dictates how your software version should increment.</p>
         
         <div class="structure-display">
-            <span class="token v-major" data-info="Cambios incompatibles en API (BREAKING CHANGE)">MAJOR</span>
+            <span class="token v-major" data-i18n-info="semver.major">MAJOR</span>
             <span class="v-dot">.</span>
-            <span class="token v-minor" data-info="Nueva funcionalidad retro-compatible (feat)">MINOR</span>
+            <span class="token v-minor" data-i18n-info="semver.minor">MINOR</span>
             <span class="v-dot">.</span>
-            <span class="token v-patch" data-info="Corrección de bugs retro-compatible (fix)">PATCH</span>
+            <span class="token v-patch" data-i18n-info="semver.patch">PATCH</span>
         </div>
         
-        <p class="text--caption">
-            Ejemplo: Si estás en la versión <strong>1.0.0</strong> y haces un commit tipo <code>feat: ...</code>, la siguiente versión será <strong>1.1.0</strong>.
+        <p class="text--caption" data-i18n-key="semver.example">
+            Example: If you are on version <strong>1.0.0</strong> and you make a <code>feat: ...</code> commit, the next version will be <strong>1.1.0</strong>.
         </p>
     </section>
     <!-- /SemVer Section -->
 
     <!-- Estructura Visual -->
     <section>
-        <h2>🧩 Anatomía del Mensaje</h2>
-        <p>Pasa el ratón por encima de los componentes para entender su función.</p>
+        <h2 data-i18n-key="anatomy.title">🧩 Message Anatomy</h2>
+        <p data-i18n-key="anatomy.description">Hover over components to understand their function.</p>
         
         <div class="structure-display">
-            <span class="token t-type" data-info="Tipo de cambio (ej: feat, fix)">feat</span>
-            <span class="token t-scope" data-info="(Opcional) Módulo afectado">(api)</span>
-            <span class="token t-bang" data-info="(Opcional) Breaking Change">!</span>
+            <span class="token t-type" data-i18n-info="anatomy.type">feat</span>
+            <span class="token t-scope" data-i18n-info="anatomy.scope">(api)</span>
+            <span class="token t-bang" data-i18n-info="anatomy.bang">!</span>
             <span class="token t-colon">:</span>
-            <span class="token t-desc" data-info="Breve descripción imperativa">añadir autenticación por token</span>
+            <span class="token t-desc" data-i18n-info="anatomy.desc">add token authentication</span>
         </div>
 
-        <p class="text--caption">
-            El cuerpo y el pie del mensaje son opcionales y van después de una línea en blanco.
+        <p class="text--caption" data-i18n-key="anatomy.note">
+            The body and footer of the message are optional and come after a blank line.
         </p>
     </section>
     <!-- /Estructura Visual -->
 
     <!-- Tipos de Commits -->
     <section>
-        <h2>🏷️ Tipos de Commits</h2>
-        <p>Selecciona una pestaña para ver los tipos básicos o la lista completa de la convención Angular.</p>
+        <h2 data-i18n-key="commitTypes.title">🏷️ Commit Types</h2>
+        <p data-i18n-key="commitTypes.description">Select a tab to see the basic types or the full Angular convention list.</p>
 
-        <div class="tabs" role="tablist" aria-label="Tipos de commits">
-            <button id="tab-basic" class="tabs__button active" role="tab" aria-selected="true" aria-controls="basic">Principales</button>
-            <button id="tab-angular" class="tabs__button" role="tab" aria-selected="false" aria-controls="angular">Convención Angular (Todos)</button>
+        <div class="tabs" role="tablist" aria-label="Commit types">
+            <button id="tab-basic" class="tabs__button active" role="tab" aria-selected="true" aria-controls="basic" data-i18n-key="commitTypes.tabs.basic">Main Types</button>
+            <button id="tab-angular" class="tabs__button" role="tab" aria-selected="false" aria-controls="angular" data-i18n-key="commitTypes.tabs.angular">Angular Convention (All)</button>
         </div>
 
         <div id="basic" class="tabs__panel active" role="tabpanel" aria-labelledby="tab-basic">
@@ -87,75 +95,75 @@
                 <!-- BREAKING CHANGE (Reordenado: 1ro) -->
                 <div class="card card--danger">
                     <div class="card__header">
-                        <span class="card__title text-danger">BREAKING CHANGE</span>
+                        <span class="card__title text-danger" data-i18n-key="commitTypes.breaking.title">BREAKING CHANGE</span>
                         <span class="semver-tag sv-major">MAJOR</span>
                     </div>
-                    <p>Un cambio que rompe la compatibilidad. Se indica con <code>!</code> después del tipo o con un pie <code>BREAKING CHANGE:</code>.</p>
-                    <code class="code--small text-danger">feat!: drop node 12 support</code>
+                    <p data-i18n-key="commitTypes.breaking.description">A change that breaks compatibility. Indicated with <code>!</code> after the type or with a <code>BREAKING CHANGE:</code> footer.</p>
+                    <code class="code--small text-danger" data-i18n-key="commitTypes.breaking.example">feat!: drop node 12 support</code>
                 </div>
 
                 <!-- FEAT (Reordenado: 2do) -->
                 <div class="card">
                     <div class="card__header">
-                        <span class="card__title">feat</span>
+                        <span class="card__title" data-i18n-key="commitTypes.feat.title">feat</span>
                         <span class="semver-tag sv-minor">MINOR</span>
                     </div>
-                    <p>Introduce una nueva característica al código (feature). Equivale a MINOR en SemVer.</p>
-                    <code class="code--small text-primary">feat: allow zoom on images</code>
+                    <p data-i18n-key="commitTypes.feat.description">Introduces a new feature to the code (feature). Equivalent to MINOR in SemVer.</p>
+                    <code class="code--small text-primary" data-i18n-key="commitTypes.feat.example">feat: allow zoom on images</code>
                 </div>
 
                 <!-- FIX (Reordenado: 3ro) -->
                 <div class="card">
                     <div class="card__header">
-                        <span class="card__title">fix</span>
+                        <span class="card__title" data-i18n-key="commitTypes.fix.title">fix</span>
                         <span class="semver-tag sv-patch">PATCH</span>
                     </div>
-                    <p>Arregla un error (bug) en el código. Equivale a PATCH en SemVer.</p>
-                    <code class="code--small text-success">fix: handle null user id</code>
+                    <p data-i18n-key="commitTypes.fix.description">Fixes a bug in the code. Equivalent to PATCH in SemVer.</p>
+                    <code class="code--small text-success" data-i18n-key="commitTypes.fix.example">fix: handle null user id</code>
                 </div>
             </div>
         </div>
 
         <div id="angular" class="tabs__panel" role="tabpanel" aria-labelledby="tab-angular">
-            <p class="text--intro">
-                Aunque la especificación permite cualquier tipo, estos son los adoptados casi universalmente.
+            <p class="text--intro" data-i18n-key="commitTypes.angularIntro">
+                Although the specification allows any type, these are almost universally adopted.
             </p>
             <div class="grid-types">
                 <div class="card">
                     <div class="card__header"><span class="card__title">docs</span></div>
-                    <p>Cambios que afectan únicamente a la documentación (archivos README, comentarios JSDoc, tutoriales), sin modificar el código funcional.</p>
+                    <p data-i18n-key="commitTypes.docs.description">Changes affecting only documentation (README files, JSDoc comments, tutorials), without modifying functional code.</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">style</span></div>
-                    <p>Cambios de formato que no afectan la lógica del código (espacios en blanco, indentación, puntos y coma faltantes). No confundir con estilos CSS.</p>
+                    <p data-i18n-key="commitTypes.style.description">Format changes that do not affect code logic (whitespace, indentation, missing semicolons). Not to be confused with CSS styles.</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">refactor</span></div>
-                    <p>Un cambio en el código de producción que no corrige errores ni añade funcionalidades, pero mejora la estructura o legibilidad.</p>
+                    <p data-i18n-key="commitTypes.refactor.description">A change to production code that neither fixes bugs nor adds features, but improves structure or readability.</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">perf</span></div>
-                    <p>Cambios dedicados específicamente a mejorar el rendimiento del sistema (optimización de algoritmos, reducción de tiempos de carga).</p>
+                    <p data-i18n-key="commitTypes.perf.description">Changes specifically dedicated to improving system performance (algorithm optimization, reducing load times).</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">test</span></div>
-                    <p>Adición de pruebas unitarias o de integración faltantes, o corrección de pruebas existentes que no funcionaban correctamente.</p>
+                    <p data-i18n-key="commitTypes.test.description">Addition of missing unit or integration tests, or fixing existing tests that were not working correctly.</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">build</span></div>
-                    <p>Cambios que afectan al sistema de compilación o dependencias externas (ej. npm, maven, gradle, webpack, gulp).</p>
+                    <p data-i18n-key="commitTypes.build.description">Changes affecting the build system or external dependencies (e.g., npm, maven, gradle, webpack, gulp).</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">ci</span></div>
-                    <p>Cambios en los archivos de configuración y scripts de Integración Continua (ej. GitHub Actions, Travis, CircleCI).</p>
+                    <p data-i18n-key="commitTypes.ci.description">Changes to Continuous Integration configuration files and scripts (e.g., GitHub Actions, Travis, CircleCI).</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">chore</span></div>
-                    <p>Tareas rutinarias que no modifican el código fuente ni las pruebas (ej. actualización de versiones, tareas de mantenimiento de scripts).</p>
+                    <p data-i18n-key="commitTypes.chore.description">Routine tasks that do not modify source code or tests (e.g., version updates, script maintenance tasks).</p>
                 </div>
                 <div class="card">
                     <div class="card__header"><span class="card__title">revert</span></div>
-                    <p>Se utiliza para revertir un commit anterior. El cuerpo del mensaje suele contener el hash del commit que se está revirtiendo.</p>
+                    <p data-i18n-key="commitTypes.revert.description">Used to revert a previous commit. The message body usually contains the hash of the commit being reverted.</p>
                 </div>
             </div>
         </div>
@@ -164,46 +172,40 @@
 
     <!-- Ejemplos Avanzados -->
     <section>
-        <h2>📚 Ejemplos Reales</h2>
+        <h2 data-i18n-key="examples.title">📚 Real Examples</h2>
         
-        <h3>1. Commit básico con tipo y ámbito</h3>
-        <pre>feat(ui): agregar botón de modo oscuro</pre>
+        <h3 data-i18n-key="examples.basic.title">1. Basic commit with type and scope</h3>
+        <pre data-i18n-key="examples.basic.code">feat(ui): add dark mode button</pre>
 
-        <h3>2. Commit completo con cuerpo y múltiples pies</h3>
-        <pre>fix: corrección de validación de usuarios
+        <h3 data-i18n-key="examples.complete.title">2. Complete commit with body and multiple footers</h3>
+        <pre data-i18n-key="examples.complete.code">fix: fix user validation
 
-Se ha actualizado la lógica para permitir caracteres especiales en nombres.
-Esto soluciona el problema reportado por soporte.
+Updated logic to allow special characters in names.
+This solves the issue reported by support.
 
 Reviewed-by: J. Doe
 Refs: #456</pre>
 
-        <h3>3. Breaking Change (Dos variantes para el mismo cambio)</h3>
-        <p class="text--note"><strong>Opción A (Concisa):</strong> Usando <code>!</code> en la cabecera para indicar impacto MAJOR.</p>
-        <pre>feat(api)!: cambiar estructura de respuesta de error</pre>
+        <h3 data-i18n-key="examples.breaking.title">3. Breaking Change (Two variants for the same change)</h3>
+        <p class="text--note" data-i18n-key="examples.breaking.optionA"><strong>Option A (Concise):</strong> Using <code>!</code> in the header to indicate MAJOR impact.</p>
+        <pre data-i18n-key="examples.breaking.codeA">feat(api)!: change error response structure</pre>
         
-        <p class="text--note"><strong>Opción B (Explicativa):</strong> Usando el footer <code>BREAKING CHANGE</code> cuando se necesita detalle.</p>
-        <pre>feat(api): cambiar estructura de respuesta de error
+        <p class="text--note" data-i18n-key="examples.breaking.optionB"><strong>Option B (Explanatory):</strong> Using the <code>BREAKING CHANGE</code> footer when detail is needed.</p>
+        <pre data-i18n-key="examples.breaking.codeB">feat(api): change error response structure
 
-BREAKING CHANGE: la propiedad 'error' ahora devuelve un objeto en lugar de un string.</pre>
+BREAKING CHANGE: the 'error' property now returns an object instead of a string.</pre>
     </section>
     <!-- /Ejemplos Avanzados -->
 
     <!-- Playground -->
     <section>
-        <h2>⚡ Zona de Práctica</h2>
-        <p>Prueba a escribir un mensaje completo. El validador analizará la cabecera, el cuerpo y el pie por separado.</p>
+        <h2 data-i18n-key="playground.title">⚡ Practice Zone</h2>
+        <p data-i18n-key="playground.description">Try writing a complete message. The validator will analyze the header, body, and footer separately.</p>
         
         <div class="playground">
             <div class="playground__input-wrapper">
-                <label for="commit-input">Redacción del Commit:</label>
-                <textarea id="commit-input" placeholder="feat(auth): add google login support
-
-This adds the ability to login with google.
-We needed to update the user schema.
-
-Reviewed-by: J. Doe
-BREAKING CHANGE: login api v1 is removed"></textarea>
+                <label for="commit-input" data-i18n-key="playground.label">Commit Draft:</label>
+                <textarea id="commit-input" data-i18n-placeholder="playground.placeholder"></textarea>
             </div>
             
             <div id="validation-result"></div>
@@ -211,21 +213,21 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
             <div id="visual-stack" class="playground__visual-stack hidden">
                 <!-- Header Card -->
                 <div id="card-header" class="visual-breakdown__card visual-breakdown__card--neutral">
-                    <span class="visual-breakdown__pill">Header</span>
+                    <span class="visual-breakdown__pill" data-i18n-key="playground.cards.header">Header</span>
                     <div id="content-header" class="visual-breakdown__content"></div>
                     <div id="feedback-header" class="visual-breakdown__feedback"></div>
                 </div>
 
                 <!-- Body Card -->
                 <div id="card-body" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
-                    <span class="visual-breakdown__pill">Body</span>
+                    <span class="visual-breakdown__pill" data-i18n-key="playground.cards.body">Body</span>
                     <div id="content-body" class="visual-breakdown__content"></div>
                     <div id="feedback-body" class="visual-breakdown__feedback"></div>
                 </div>
 
                 <!-- Footer Card -->
                 <div id="card-footer" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
-                    <span class="visual-breakdown__pill">Footer(s)</span>
+                    <span class="visual-breakdown__pill" data-i18n-key="playground.cards.footer">Footer(s)</span>
                     <div id="content-footer" class="visual-breakdown__content"></div>
                     <div id="feedback-footer" class="visual-breakdown__feedback"></div>
                 </div>
@@ -239,7 +241,7 @@ BREAKING CHANGE: login api v1 is removed"></textarea>
 
 <!-- Footer Section -->
 <footer>
-    <p>Construido para educar sobre <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener noreferrer">Conventional Commits</a>.</p>
+    <p><span data-i18n-key="footer.builtFor">Built to educate about</span> <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener noreferrer" data-i18n-key="footer.link">Conventional Commits</a>.</p>
 </footer>
 <!-- /Footer Section -->
 
