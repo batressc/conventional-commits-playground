@@ -7,6 +7,10 @@
  * Escapes HTML special characters to prevent XSS
  * @param {string} text - Text to escape
  * @returns {string} Escaped text safe for innerHTML
+ * @example
+ * const userInput = '<script>alert("XSS")</script>';
+ * const safe = escapeHtml(userInput);
+ * // Returns: '&lt;script&gt;alert("XSS")&lt;/script&gt;'
  */
 export const escapeHtml = (text) => {
     const div = document.createElement('div');
@@ -15,15 +19,14 @@ export const escapeHtml = (text) => {
 };
 
 /**
- * Checks if a string is empty or contains only whitespace
- * @param {string} str - String to check
- * @returns {boolean} True if empty or whitespace only
+ * Shows or hides an element
+ * @param {HTMLElement} element - Element to show/hide
+ * @param {boolean} visible - Whether to show the element
+ * @example
+ * const modal = document.getElementById('modal');
+ * setVisible(modal, true); // Shows modal
+ * setVisible(modal, false); // Hides modal
  */
-export const isBlank = (str) => !str || str.trim() === '';
-
-/**
- * Joins array elements with newlines and trims the result
- * @param {string[]} lines - Array of lines
- * @returns {string} Joined and trimmed string
- */
-export const joinLines = (lines) => lines.join('\n').trim();
+export const setVisible = (element, visible) => {
+    element.style.display = visible ? 'block' : 'none';
+};

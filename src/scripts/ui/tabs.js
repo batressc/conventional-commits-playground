@@ -10,18 +10,19 @@
  * @param {string} tabName - The ID of the panel to show
  */
 const openTab = (button, tabName) => {
-    const tabPanels = document.getElementsByClassName('tabs__panel');
-    const tabButtons = document.getElementsByClassName('tabs__button');
+    const tabPanels = document.querySelectorAll('.tabs__panel');
+    const tabButtons = document.querySelectorAll('.tabs__button');
 
     // Hide all panels and deactivate buttons
-    for (let i = 0; i < tabPanels.length; i++) {
-        tabPanels[i].style.display = 'none';
-        tabPanels[i].classList.remove('active');
-    }
-    for (let i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove('active');
-        tabButtons[i].setAttribute('aria-selected', 'false');
-    }
+    tabPanels.forEach(panel => {
+        panel.style.display = 'none';
+        panel.classList.remove('active');
+    });
+    
+    tabButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+    });
 
     // Show selected panel and activate button
     const panel = document.getElementById(tabName);

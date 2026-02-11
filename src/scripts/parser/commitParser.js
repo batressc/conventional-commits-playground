@@ -19,6 +19,16 @@ import { FOOTER_START_REGEX, BREAKING_CHANGE_REGEX } from '../constants/commitTy
  * Parses a commit message into its components
  * @param {string} text - Raw commit message text
  * @returns {ParsedCommit} Parsed commit structure
+ * @example
+ * const commit = parseCommitMessage('feat(auth): add login\n\nThis adds login.\n\nBREAKING CHANGE: API v1 removed');
+ * // Returns: {
+ * //   header: 'feat(auth): add login',
+ * //   bodyLines: ['This adds login.'],
+ * //   footerLines: ['BREAKING CHANGE: API v1 removed'],
+ * //   footerStartIndex: 3,
+ * //   hasBreakingFooter: true,
+ * //   lines: [...]
+ * // }
  */
 export const parseCommitMessage = (text) => {
     const lines = text.split('\n');

@@ -11,11 +11,12 @@ import {
     setCardStatus,
     renderErrors,
     renderSuccess,
-    renderInfo,
+    renderSuccessWithHtml,
+    renderInfoWithHtml,
     getSemVerTag,
-    updateResultBox,
-    setVisible
+    updateResultBox
 } from './feedback.js';
+import { setVisible } from '../utils/helpers.js';
 
 /**
  * DOM element references for the playground
@@ -59,18 +60,17 @@ const handleHeaderValidation = (parsed) => {
     if (result.isValid) {
         setCardStatus(cardHeader, CardStatus.VALID);
         
-        let feedbackHtml = `<div class="message--success">✅ Formato correcto. Impacto: ${getSemVerTag(result.semVerImpact)}</div>`;
+        let feedbackHtml = `Formato correcto. Impacto: ${getSemVerTag(result.semVerImpact)}`;
+        renderSuccessWithHtml(fbHeader, feedbackHtml);
         
         // Add info notes about breaking changes
         if (result.semVerImpact === 'MAJOR') {
             if (hasBreakingFooter && !result.hasBreakingIndicator) {
-                feedbackHtml += '<div class="message--info">ℹ️ Impacto elevado a MAJOR debido a <code>BREAKING CHANGE</code> en footer.</div>';
+                renderInfoWithHtml(fbHeader, 'Impacto elevado a MAJOR debido a <code>BREAKING CHANGE</code> en footer.');
             } else if (result.hasBreakingIndicator) {
-                feedbackHtml += '<div class="message--info">ℹ️ Impacto MAJOR indicado por <code>!</code>.</div>';
+                renderInfoWithHtml(fbHeader, 'Impacto MAJOR indicado por <code>!</code>.');
             }
         }
-        
-        fbHeader.innerHTML = feedbackHtml;
     } else {
         setCardStatus(cardHeader, CardStatus.ERROR);
         renderErrors(fbHeader, result.errors);
@@ -135,7 +135,7 @@ const handleFooterValidation = (parsed) => {
     } else {
         setCardStatus(cardFooter, CardStatus.VALID);
         const extra = hasBreakingFooter ? ' <b>(Incluye BREAKING CHANGE)</b>' : '';
-        renderSuccess(fbFooter, `Footer(s) válido(s).${extra}`);
+        renderSuccessWithHtml(fbFooter, `Footer(s) válido(s).${extra}`);
     }
 
     return result;
@@ -152,13 +152,13 @@ const handleInput = (event) => {
     // Handle empty input
     if (text.trim() === '') {
         setVisible(resultBox, false);
-        visualStack.style.display = 'none';
+        setVisible(visualStack, false);
         return;
     }
 
     // Show validation UI
     setVisible(resultBox, true);
-    visualStack.style.display = 'flex';
+    setVisible(visualStack, true);
 
     // Parse and validate
     const parsed = parseCommitMessage(text);

@@ -19,6 +19,12 @@ import { HEADER_REGEX, FOOTER_LINE_REGEX } from '../constants/commitTypes.js';
  * @param {string} header - The header line
  * @param {boolean} hasBreakingFooter - Whether a BREAKING CHANGE footer exists
  * @returns {HeaderValidationResult} Validation result
+ * @example
+ * validateHeader('feat(auth): add login', false);
+ * // Returns: { isValid: true, hasBreakingIndicator: false, semVerImpact: 'MINOR', errors: [] }
+ * 
+ * validateHeader('invalid header', false);
+ * // Returns: { isValid: false, semVerImpact: 'NONE', errors: ['validation.header.invalidFormat'] }
  */
 export const validateHeader = (header, hasBreakingFooter = false) => {
     const errors = [];
@@ -44,7 +50,7 @@ export const validateHeader = (header, hasBreakingFooter = false) => {
             semVerImpact = 'NONE';
         }
     } else {
-        errors.push('El formato debe ser: <code>tipo(scope): descripción</code>');
+        errors.push('validation.header.invalidFormat');
     }
 
     return {
@@ -68,6 +74,9 @@ export const validateHeader = (header, hasBreakingFooter = false) => {
  * @param {string[]} lines - All original commit lines
  * @param {number} footerStartIndex - Index where footer starts (-1 if none)
  * @returns {BodyValidationResult} Validation result
+ * @example
+ * validateBody(['feat: add login', '', 'This adds login functionality'], -1);
+ * // Returns: { isValid: true, isEmpty: false, bodyText: 'This adds login functionality', errors: [] }
  */
 export const validateBody = (lines, footerStartIndex = -1) => {
     const errors = [];
@@ -90,15 +99,15 @@ export const validateBody = (lines, footerStartIndex = -1) => {
 
     // Rule: Blank line after header
     if (lines[1].trim() !== '') {
-        errors.push('Falta una línea en blanco entre la cabecera y el cuerpo.');
+        errors.push('validation.body.missingBlankLine');
     }
 
     // Check for misplaced BREAKING CHANGE in body
     if (/^BREAKING CHANGE:/m.test(bodyText)) {
         if (footerStartIndex !== -1) {
-            errors.push("Detectado 'BREAKING CHANGE' en el cuerpo y también en el footer. ¿Es un duplicado? Si es distinto, asegúrate de separarlo con líneas en blanco.");
+            errors.push('validation.body.duplicateBreakingChange');
         } else {
-            errors.push("Parece que tienes un 'BREAKING CHANGE' pegado al cuerpo. Debes dejar una línea en blanco antes para que sea un footer válido.");
+            errors.push('validation.body.breakingChangeNeedsBlankLine');
         }
     }
 
@@ -121,6 +130,9 @@ export const validateBody = (lines, footerStartIndex = -1) => {
  * Validates footer lines
  * @param {string[]} footerLines - Array of footer lines
  * @returns {FooterValidationResult} Validation result
+ * @example
+ * validateFooter(['BREAKING CHANGE: API v1 removed']);
+ * // Returns: { isValid: true, hasBreakingChange: true, errors: [] }
  */
 export const validateFooter = (footerLines) => {
     const errors = [];
@@ -145,26 +157,26 @@ export const validateFooter = (footerLines) => {
                 
                 // Strict validation for BREAKING CHANGE
                 if (separator !== ': ') {
-                    errors.push('Un footer de <code>BREAKING CHANGE</code> debe usar exactamente dos puntos y espacio (<code>: </code>) como separador.');
+                    errors.push('validation.footer.breakingChangeSeparator');
                 } else if (!value || value.trim() === '') {
-                    errors.push('Un footer de <code>BREAKING CHANGE</code> debe tener una descripción.');
+                    errors.push('validation.footer.breakingChangeEmpty');
                 }
             } else {
                 // Validation for other tokens
                 if (/\s/.test(token)) {
                     if (token.toUpperCase() === 'BREAKING CHANGE') {
-                        errors.push(`El token '${token}' debe estar en MAYÚSCULAS: <code>BREAKING CHANGE</code>.`);
+                        errors.push('validation.footer.breakingChangeCase');
                     } else if (token.toUpperCase() === 'BREAKING CHANGES') {
-                        errors.push(`El token '${token}' es incorrecto. Usa <code>BREAKING CHANGE</code> (singular).`);
+                        errors.push('validation.footer.breakingChangePlural');
                     } else {
-                        errors.push(`El token '${token}' no debe contener espacios (usa guiones, ej: <code>Reviewed-by</code>).`);
+                        errors.push('validation.footer.tokenWithSpaces');
                     }
                 }
             }
         } else {
             // First line must be valid footer format
             if (index === 0) {
-                errors.push(`La línea '${line}' no parece un footer válido (Formato: <code>Token: valor</code>).`);
+                errors.push('validation.footer.invalidFormat');
             }
         }
     });

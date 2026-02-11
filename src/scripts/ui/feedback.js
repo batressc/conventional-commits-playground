@@ -4,6 +4,8 @@
  * @module ui/feedback
  */
 
+import { escapeHtml } from '../utils/helpers.js';
+
 /**
  * Card status types
  * @type {Object<string, string>}
@@ -26,30 +28,41 @@ export const setCardStatus = (card, status) => {
 /**
  * Renders error messages to a feedback container
  * @param {HTMLElement} container - The feedback container element
- * @param {string[]} errors - Array of error messages (can contain HTML)
+ * @param {string[]} errors - Array of error messages (plain text, will be escaped)
  */
 export const renderErrors = (container, errors) => {
-    container.innerHTML = errors
-        .map(error => `<div class="message--error">❌ ${error}</div>`)
-        .join('');
+    container.innerHTML = '';
+    errors.forEach(error => {
+        const div = document.createElement('div');
+        div.className = 'message--error';
+        div.textContent = `❌ ${error}`;
+        container.appendChild(div);
+    });
 };
 
 /**
  * Renders a success message to a feedback container
  * @param {HTMLElement} container - The feedback container element
- * @param {string} message - Success message (can contain HTML)
+ * @param {string} message - Success message (plain text, will be escaped)
  */
 export const renderSuccess = (container, message) => {
-    container.innerHTML = `<div class="message--success">✅ ${message}</div>`;
+    container.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'message--success';
+    div.textContent = `✅ ${message}`;
+    container.appendChild(div);
 };
 
 /**
  * Renders an info message to a feedback container
  * @param {HTMLElement} container - The feedback container element
- * @param {string} message - Info message (can contain HTML)
+ * @param {string} message - Info message (plain text, will be escaped)
  */
 export const renderInfo = (container, message) => {
-    container.innerHTML += `<div class="message--info">ℹ️ ${message}</div>`;
+    const div = document.createElement('div');
+    div.className = 'message--info';
+    div.textContent = `ℹ️ ${message}`;
+    container.appendChild(div);
 };
 
 /**
@@ -83,20 +96,45 @@ export const getSemVerTag = (impact) => {
  * @param {boolean} isValid - Whether the commit is globally valid
  */
 export const updateResultBox = (resultBox, isValid) => {
-    if (isValid) {
-        resultBox.innerHTML = '✅ <strong>Mensaje Válido</strong> según la especificación.';
-        resultBox.className = 'validation-result--valid';
-    } else {
-        resultBox.innerHTML = '⚠️ <strong>Hay errores</strong> en el formato. Revisa las tarjetas abajo.';
-        resultBox.className = 'validation-result--invalid';
+    resultBox.innerHTML = '';
+    const icon = isValid ? '✅' : '⚠️';
+    const text = isValid ? 'Mensaje Válido según la especificación.' : 'Hay errores en el formato. Revisa las tarjetas abajo.';
+    const strongText = isValid ? 'Mensaje Válido' : 'Hay errores';
+    
+    const iconText = document.createTextNode(`${icon} `);
+    const strong = document.createElement('strong');
+    strong.textContent = strongText;
+    const remainingText = document.createTextNode(text.substring(strongText.length));
+    
+    resultBox.appendChild(iconText);
+    resultBox.appendChild(strong);
+    if (text.length > strongText.length) {
+        resultBox.appendChild(remainingText);
     }
+    resultBox.className = isValid ? 'validation-result--valid' : 'validation-result--invalid';
 };
 
 /**
- * Shows or hides an element
- * @param {HTMLElement} element - Element to show/hide
- * @param {boolean} visible - Whether to show the element
+ * Renders a success message with safe HTML content (for internal use only)
+ * @param {HTMLElement} container - The feedback container element
+ * @param {string} htmlContent - Safe HTML content (generated internally, not user input)
  */
-export const setVisible = (element, visible) => {
-    element.style.display = visible ? 'block' : 'none';
+export const renderSuccessWithHtml = (container, htmlContent) => {
+    container.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'message--success';
+    div.innerHTML = `✅ ${htmlContent}`;
+    container.appendChild(div);
+};
+
+/**
+ * Renders an info message with safe HTML content (for internal use only)
+ * @param {HTMLElement} container - The feedback container element
+ * @param {string} htmlContent - Safe HTML content (generated internally, not user input)
+ */
+export const renderInfoWithHtml = (container, htmlContent) => {
+    const div = document.createElement('div');
+    div.className = 'message--info';
+    div.innerHTML = `ℹ️ ${htmlContent}`;
+    container.appendChild(div);
 };
