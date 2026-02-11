@@ -10,8 +10,12 @@ Bienvenido al proyecto **conventional-commits-playground**. Este documento estab
 4. [Proceso de Pull Requests](#proceso-de-pull-requests)
 5. [Estrategia de Merge](#estrategia-de-merge)
 6. [Convenciones de Nomenclatura](#convenciones-de-nomenclatura)
-7. [Convenciones de Archivos Markdown](#convenciones-de-archivos-markdown)
-8. [Procedimientos Recomendados (To-Do)](#procedimientos-recomendados-to-do)
+7. [Conventional Commits](#conventional-commits)
+8. [Versionado Semántico (SemVer)](#versionado-semántico-semver)
+9. [Proceso de Release](#proceso-de-release)
+10. [CHANGELOG](#changelog)
+11. [Convenciones de Archivos Markdown](#convenciones-de-archivos-markdown)
+12. [Procedimientos Recomendados (To-Do)](#procedimientos-recomendados-to-do)
 
 ---
 
@@ -84,13 +88,19 @@ develop ─┬─> feature/123-nueva-funcionalidad
 ### Flujo Típico para Releases
 
 ```
-develop ─┬─> release/1.0.0
+develop ─┬─> release/1.1.0
          │         │
-         │         │ (preparación, bugfixes)
+         │         │ npm run release
+         │         │ (versión + CHANGELOG + commit)
+         │         │
+         │         │ Push + PR a main
          │         │
 main ────┴─────────┴─> (merge via PR)
+         │         │
+         │    git tag v1.1.0 (en main)
+         │    git push origin v1.1.0
          │
-develop ─┴─────────> (merge de cambios de release)
+develop ─┴─────────> (merge de main a develop)
 ```
 
 ### Flujo Típico para Hotfixes
@@ -234,6 +244,278 @@ Todas las ramas de soporte deben seguir el formato:
 
 ---
 
+## Conventional Commits
+
+Este proyecto adopta la especificación [Conventional Commits v1.0.0](https://www.conventionalcommits.org/) para todos los mensajes de commit. Esta convención permite generar automáticamente el CHANGELOG, determinar la versión semántica y mantener un historial de commits limpio y legible.
+
+### Formato del Mensaje
+
+```
+<tipo>(<alcance opcional>): <descripción>
+
+[cuerpo opcional]
+
+[pie de página opcional]
+```
+
+### Tipos Válidos
+
+| Tipo | Descripción | Impacto en SemVer |
+|------|-------------|-------------------|
+| `feat` | Nueva funcionalidad | MINOR |
+| `fix` | Corrección de error | PATCH |
+| `docs` | Cambios en documentación | - |
+| `style` | Formato, punto y coma, etc. (sin cambio de código) | - |
+| `refactor` | Refactorización de código | - |
+| `perf` | Mejora de rendimiento | PATCH |
+| `test` | Agregar o corregir tests | - |
+| `build` | Cambios en sistema de build o dependencias | - |
+| `ci` | Cambios en configuración de CI/CD | - |
+| `chore` | Tareas de mantenimiento | - |
+| `revert` | Revertir un commit anterior | - |
+
+### Breaking Changes
+
+Los cambios incompatibles con versiones anteriores se indican de dos formas:
+
+1. **Con `!` después del tipo/alcance**: `feat!: remove deprecated API`
+2. **Con footer `BREAKING CHANGE:`**:
+   ```
+   feat(api): change response format
+
+   BREAKING CHANGE: the response now returns an array instead of an object
+   ```
+
+Cualquier breaking change incrementa la versión **MAJOR**.
+
+### Ejemplos
+
+```bash
+# Feature simple
+feat(playground): add real-time commit validation
+
+# Fix con alcance
+fix(parser): resolve incorrect footer detection
+
+# Documentación
+docs(readme): update installation instructions
+
+# Breaking change
+feat(api)!: redesign commit parser output format
+
+BREAKING CHANGE: parseCommit() now returns a structured object instead of a string array
+
+# Commit con cuerpo y footer
+feat(ui): add dark mode toggle
+
+Implement theme switching with CSS custom properties.
+Persist user preference in localStorage.
+
+Closes #42
+```
+
+### Herramientas Instaladas
+
+#### commitlint + husky (Validación Automática)
+
+Cada commit es validado automáticamente mediante un **git hook**. Si el mensaje no cumple con el formato Conventional Commits, el commit será **rechazado**.
+
+- **commitlint**: Valida el formato del mensaje de commit
+- **husky**: Ejecuta commitlint automáticamente en cada commit via el hook `commit-msg`
+- **Configuración**: `commitlint.config.js` en la raíz del proyecto
+
+> ⚠️ Si intentas hacer un commit con un mensaje inválido como `"updated stuff"`, será rechazado. Debes usar el formato `tipo: descripción` como mínimo.
+
+#### commitizen (Asistente Interactivo por Terminal)
+
+Para facilitar la creación de commits válidos, se incluye **commitizen** como asistente interactivo:
+
+```bash
+npm run commit
+```
+
+Esto abre un asistente paso a paso que pregunta:
+1. Tipo de cambio (feat, fix, docs, etc.)
+2. Alcance del cambio (opcional)
+3. Descripción corta
+4. Descripción larga (opcional)
+5. Breaking changes (opcional)
+6. Issues relacionados (opcional)
+
+#### Extensión de VS Code (Conventional Commits)
+
+El proyecto recomienda la extensión **Conventional Commits** (`vivaxy.vscode-conventional-commits`) para Visual Studio Code. Al abrir el proyecto, VS Code sugerirá instalarla.
+
+**Cómo usarla:**
+1. Abrir el panel **Source Control** (Ctrl+Shift+G)
+2. Hacer clic en el ícono de ✔️ círculo (Conventional Commits) en la barra superior del panel
+3. Seguir el asistente visual paso a paso
+4. El mensaje se genera automáticamente en el campo de commit
+
+---
+
+## Versionado Semántico (SemVer)
+
+El proyecto adopta **Semantic Versioning 2.0.0** ([semver.org](https://semver.org/)) para gestionar las versiones.
+
+### Formato de Versión
+
+```
+MAJOR.MINOR.PATCH
+```
+
+| Componente | Cuándo se incrementa | Ejemplo |
+|------------|---------------------|---------|
+| **MAJOR** | Cambios incompatibles (breaking changes) | `1.0.0` → `2.0.0` |
+| **MINOR** | Nueva funcionalidad compatible hacia atrás | `1.0.0` → `1.1.0` |
+| **PATCH** | Correcciones de bugs compatibles | `1.0.0` → `1.0.1` |
+
+### Cálculo Automático
+
+La versión se calcula automáticamente basándose en los commits desde la última versión:
+
+- Commit `feat:` → incrementa **MINOR**
+- Commit `fix:` → incrementa **PATCH**
+- Commit `perf:` → incrementa **PATCH**
+- Commit con `BREAKING CHANGE` o `!` → incrementa **MAJOR**
+- Otros tipos (`docs`, `style`, `refactor`, etc.) → no incrementan versión
+
+### Herramienta: commit-and-tag-version
+
+Se utiliza **commit-and-tag-version** (sucesor de `standard-version`) para automatizar:
+
+1. Cálculo de la siguiente versión basado en commits
+2. Actualización de `package.json` con la nueva versión
+3. Generación/actualización de `CHANGELOG.md`
+4. Creación de un commit de release (`chore(release): X.Y.Z`)
+
+**Configuración:** `.versionrc.json` en la raíz del proyecto.
+
+> ⚠️ **Nota sobre tags en Git Flow:** El tag NO se crea automáticamente (configuración `skip.tag: true`). El tag se crea manualmente en `main` después del merge, para que apunte al commit correcto en la rama protegida.
+
+### Scripts Disponibles
+
+| Script | Comando | Uso |
+|--------|---------|-----|
+| `npm run release:preview` | `commit-and-tag-version --dry-run` | Vista previa de la siguiente versión (sin modificar archivos) |
+| `npm run release` | `commit-and-tag-version` | Release automático (calcula versión) |
+| `npm run release:first` | `commit-and-tag-version --first-release` | Primer release (solo genera CHANGELOG) |
+| `npm run release:major` | `commit-and-tag-version --release-as major` | Forzar bump MAJOR |
+| `npm run release:minor` | `commit-and-tag-version --release-as minor` | Forzar bump MINOR |
+| `npm run release:patch` | `commit-and-tag-version --release-as patch` | Forzar bump PATCH |
+
+---
+
+## Proceso de Release
+
+El proceso de release integra **Git Flow** con **commit-and-tag-version** para automatizar el versionado y la generación de CHANGELOG.
+
+### Flujo Completo Paso a Paso
+
+```bash
+# 1. Verificar qué versión se calculará (sin modificar archivos)
+git checkout develop
+git pull origin develop
+npm run release:preview
+# Output muestra: "bumping version from 1.0.0 to 1.1.0"
+
+# 2. Crear rama release con el número de versión detectado
+git checkout -b release/X.Y.Z
+
+# 3. Ejecutar el release (calcula versión + actualiza CHANGELOG + crea commit)
+npm run release
+# Para el primer release del proyecto:
+npm run release:first
+# Para forzar una versión específica:
+npm run release:major  # o release:minor o release:patch
+
+# 4. Push de la rama release
+git push origin release/X.Y.Z
+
+# 5. Crear Pull Request de release/X.Y.Z → main
+#    - Obtener aprobación
+#    - Resolver discusiones
+#    - Merge (preferiblemente Squash Merge)
+
+# 6. Crear tag en main (después del merge)
+git checkout main
+git pull origin main
+git tag -a vX.Y.Z -m "chore(release): X.Y.Z"
+git push origin vX.Y.Z
+
+# 7. Merge de main de vuelta a develop
+git checkout develop
+git merge main
+git push origin develop
+
+# 8. Eliminar rama release
+git branch -d release/X.Y.Z
+git push origin --delete release/X.Y.Z
+```
+
+### ¿Por Qué el Tag se Crea en `main` y no en la Rama Release?
+
+Al usar **Squash Merge** (estrategia recomendada), los commits de la rama release se combinan en un único commit en `main`. Si el tag se creara en la rama release, apuntaría a un commit que **no existe en `main`** después del squash. Por eso:
+
+1. `commit-and-tag-version` está configurado con `skip.tag: true`
+2. El tag se crea **manualmente** en `main` después del merge
+3. Esto garantiza que el tag apunte al commit correcto en la rama de producción
+
+### Proceso para Hotfix
+
+Los hotfixes siguen un proceso similar pero desde `main`:
+
+```bash
+# 1. Crear rama hotfix desde main
+git checkout main
+git pull origin main
+git checkout -b hotfix/NNN-descripcion
+
+# 2. Realizar la corrección
+# 3. Ejecutar release (generalmente patch)
+npm run release:patch
+
+# 4. Push + PR a main + merge
+# 5. Tag en main (igual que en release)
+# 6. Merge de main a develop
+# 7. Eliminar rama hotfix
+```
+
+---
+
+## CHANGELOG
+
+El archivo `CHANGELOG.md` se genera y actualiza **automáticamente** mediante `commit-and-tag-version`. **No debe editarse manualmente.**
+
+### Estructura del CHANGELOG
+
+El CHANGELOG agrupa los cambios por versión y tipo:
+
+```markdown
+# Changelog
+
+## [1.1.0](link-comparación) (2026-02-15)
+
+### Features
+* **playground:** add real-time validation (commit-hash)
+* **ui:** add dark mode toggle (commit-hash)
+
+### Bug Fixes
+* **parser:** resolve incorrect footer detection (commit-hash)
+```
+
+### Tipos Visibles en el CHANGELOG
+
+Por configuración en `.versionrc.json`, solo estos tipos aparecen en el CHANGELOG:
+- **Features** (commits `feat:`)
+- **Bug Fixes** (commits `fix:`)
+- **Performance Improvements** (commits `perf:`)
+- **Reverts** (commits `revert:`)
+
+Otros tipos (`docs`, `style`, `refactor`, `test`, `build`, `ci`, `chore`) están ocultos por defecto para mantener el CHANGELOG enfocado en cambios relevantes para el usuario final.
+
+---
+
 ## Convenciones de Archivos Markdown
 
 Este proyecto establece una convención específica para archivos markdown que son consumidos por herramientas de inteligencia artificial (agentes, chats, contexto, memoria, configuración, etc.). El objetivo es facilitar tanto la lectura humana como la optimización para herramientas de IA.
@@ -368,40 +650,17 @@ Al revisar un Pull Request, verificar:
 
 Las siguientes secciones contienen procedimientos recomendados que aún no han sido implementados pero que se sugieren para mejorar el proceso de contribución:
 
-### 🔲 Estrategia de Versionado
+### ✅ Estrategia de Versionado
 
-**Estado**: Pendiente de definir
+**Estado**: ~~Pendiente de definir~~ **Implementado** (v2.0.0)
 
-Se recomienda establecer:
-- Adopción de **Semantic Versioning 2.0.0** (MAJOR.MINOR.PATCH)
-- Criterios para incrementar cada nivel de versión
-- Proceso de creación y gestión de tags
-- Documentación del proceso de generación de releases
-- Changelog automatizado basado en commits
+Ver sección [Versionado Semántico (SemVer)](#versionado-semántico-semver) y [Proceso de Release](#proceso-de-release).
 
-**Recursos**:
-- [Semantic Versioning Specification](https://semver.org/)
+### ✅ Convenciones de Commits
 
-### 🔲 Convenciones de Commits
+**Estado**: ~~Pendiente de definir~~ **Implementado** (v2.0.0)
 
-**Estado**: Pendiente de definir
-
-Se recomienda establecer:
-- Adopción de **Conventional Commits** para mensajes de commit
-- Formato estándar: `<tipo>(<alcance>): <descripción>`
-- Tipos válidos: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-- Generación automática de CHANGELOG
-- Validación de mensajes de commit mediante hooks
-
-**Ejemplo**:
-```
-feat(auth): add JWT token validation
-fix(api): resolve timeout in user endpoint
-docs(readme): update installation instructions
-```
-
-**Recursos**:
-- [Conventional Commits](https://www.conventionalcommits.org/)
+Ver sección [Conventional Commits](#conventional-commits).
 
 ### 🔲 Integración CI/CD
 
@@ -487,5 +746,5 @@ Si tienes preguntas sobre estos procedimientos o necesitas ayuda, por favor:
 
 ---
 
-**Última actualización**: 2026-02-07  
-**Versión**: 1.0.0
+**Última actualización**: 2026-02-10  
+**Versión**: 2.0.0
