@@ -241,6 +241,216 @@ Al revisar PRs con archivos markdown:
 - El contenido de ambos archivos debe ser equivalente (sin pérdida de información)
 - Versión `.md` debe estar optimizada para IA sin perder contexto
 
+## Descripción del Proyecto
+
+Este repositorio contiene un sitio web educativo de tipo **playground** para la enseñanza de **Conventional Commits**. El objetivo es que los usuarios puedan aprender y practicar la especificación de conventional commits de forma interactiva directamente en el navegador.
+
+## Stack Tecnológico y Filosofía de Desarrollo
+
+### Tecnologías Base
+
+El sitio se desarrolla exclusivamente con tecnologías web estándar:
+
+- **HTML5**: Maquetación semántica y moderna
+- **CSS3**: Estilos con funcionalidades modernas (custom properties, grid, flexbox, etc.)
+- **JavaScript (ECMAScript 2026+)**: Lógica e interactividad, usando la especificación más reciente disponible
+
+### Filosofía Vanilla First
+
+Debe evitarse el uso de frameworks y librerías externas en la medida de lo posible. El sitio debe desarrollarse lo más **vanilla** posible. Solo se recurrirá a librerías externas cuando la funcionalidad requerida sea compleja y su implementación manual sea impráctico o pronea a errores.
+
+Cuando sea necesario utilizar librerías externas:
+- La gestión de paquetes se realiza con **npm**
+- La resolución de módulos y bundling se gestiona con **Vite** si aplica
+
+### Herramientas de Build
+
+- Debe configurarse al menos un **task manager** (como Vite, Gulp o scripts npm) para compilar y procesar el código
+- La página final en producción debe servir versiones **minificadas** tanto de scripts como de hojas de estilo
+- El proceso de build debe automatizar: minificación de CSS, minificación de JavaScript y cualquier otra optimización necesaria
+
+## Perfil del Agente de Desarrollo
+
+El agente debe actuar como un **desarrollador senior experto** en:
+- Desarrollo de sitios web con HTML, CSS y JavaScript vanilla
+- Conocimiento empresarial de **Node.js**, **npm** y **Vite**
+- Aplicación de principios SOLID en desarrollo frontend
+- Buenas prácticas de rendimiento, accesibilidad y estándares web modernos
+
+## Estructura del Proyecto
+
+### Directorio `src/`
+
+Toda el código fuente se encuentra dentro de `src/`. La estructura interna sigue esta organización:
+
+```
+src/
+├── index.html              # Página principal
+├── styles/                 # Hojas de estilo CSS
+│   ├── main.css            # Estilos principales (o punto de entrada)
+│   └── [módulo].css        # Estilos separados por sección o módulo
+├── scripts/                # Scripts JavaScript
+│   ├── main.js             # Punto de entrada principal
+│   └── [módulo]/           # Subcarpetas por módulo o regla de negocio
+│       └── [funcionalidad].js
+└── assets/                 # Recursos estáticos (imágenes, fuentes, etc.)
+```
+
+### Carpeta `styles/`
+
+- Todos los archivos CSS se almacenan en `src/styles/`
+- Los estilos deben organizarse de forma que se pueda identificar qué sección del sitio afectan
+- Se permite e incentiva la separación de estilos en múltiples archivos por módulo o sección
+- Los comentarios son bienvenidos para delimitar secciones, pero no debe abusarse de ellos para no saturar la hoja de estilos
+
+### Carpeta `scripts/`
+
+- Todos los archivos JavaScript se almacenan en `src/scripts/`
+- Dentro de `scripts/` pueden crearse **subcarpetas** organizadas por módulos o reglas de negocio
+- Cada módulo debe tener una responsabilidad clara y coherente
+- Se usa el sistema de módulos ES (`import`/`export`) para organizar el código
+
+## Lineamientos de HTML
+
+### Maquetación Estructurada
+
+- Utilizar etiquetas **semánticas** de HTML5: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`, etc.
+- Cada sección importante debe estar delimitada con **comentarios de inicio y fin** para guiar a los desarrolladores en la comprensión de la maquetación
+
+Ejemplo de comentarios de sección:
+```html
+<!-- Hero Section -->
+<section class="hero">
+  <!-- contenido -->
+</section>
+<!-- /Hero Section -->
+
+<!-- Playground Area -->
+<section class="playground">
+  <!-- contenido -->
+</section>
+<!-- /Playground Area -->
+```
+
+### Reglas de Comentarios en HTML
+
+- Los comentarios deben ser **concisos y descriptivos**, indicando solo el inicio (`<!-- Nombre -->`) y fin (`<!-- /Nombre -->`) de secciones relevantes
+- No saturar el código con comentarios excesivos o redundantes
+- Solo comentar lo necesario para que un desarrollador pueda entender la estructura de la maquetación rápidamente
+
+### Buenas Prácticas HTML
+
+- Usar atributos modernos de HTML5
+- Mantener accesibilidad con atributos ARIA cuando sea necesario
+- Estructura de documento correcta: `<!DOCTYPE html>`, `<html lang="es">`, `<head>`, `<body>`
+
+## Lineamientos de CSS
+
+### Organización del Código
+
+- Cada archivo CSS debe contener estilos relacionados a una sección o módulo específico del sitio
+- Dentro de cada archivo, los estilos deben organizarse de forma que sea fácil identificar qué parte de la interfaz afectan
+- Usar **comentarios de sección** para delimitar bloques lógicos, pero sin abusar de ellos
+
+Ejemplo de organización en CSS:
+```css
+/* === Hero Section === */
+.hero { /* ... */ }
+.hero__title { /* ... */ }
+.hero__subtitle { /* ... */ }
+
+/* === Playground Section === */
+.playground { /* ... */ }
+.playground__input { /* ... */ }
+```
+
+### Convenciones de Estilo CSS
+
+- Aprovechar funcionalidades modernas de CSS: **Custom Properties** (`--variables`), **Grid**, **Flexbox**, **Container Queries**, `clamp()`, `min()`, `max()`, etc.
+- Preferir unidades relativas (`rem`, `em`, `%`, `vw`, `vh`) sobre unidades absolutas cuando sea apropiado
+- Mantener especificidad baja y predecible
+- Se recomienda seguir una convención de nomenclatura consistente (ejemplo: BEM o similar) para las clases CSS
+
+## Lineamientos de JavaScript
+
+### Versión y Sintaxis
+
+- Utilizar **ECMAScript 2026+** (la versión moderna más reciente)
+- Preferir **funciones flecha** (`=>`) para definición de funciones, siempre que no complique la legibilidad o el contexto de `this`
+- Usar `const` por defecto, `let` cuando sea necesario reasignar, nunca `var`
+- Usar **template literals** para concatenación de strings
+- Aprovechar **destructuring**, **spread/rest operators**, **optional chaining** (`?.`), **nullish coalescing** (`??`) y demás funcionalidades modernas
+
+### Principios SOLID
+
+El código JavaScript debe desarrollarse siguiendo los principios SOLID adaptados al contexto frontend:
+
+| Principio | Aplicación |
+|-----------|------------|
+| **S - Responsabilidad Única** | Cada función y módulo debe tener una sola responsabilidad claramente definida |
+| **O - Abierto/Cerrado** | Los módulos deben ser extensibles sin necesidad de modificar el código existente |
+| **L - Sustitución de Liskov** | Las abstracciones deben ser intercambiables sin alterar el comportamiento esperado |
+| **I - Segregación de Interfaces** | Exportar solo lo necesario desde cada módulo, evitar interfaces "gordas" |
+| **D - Inversión de Dependencias** | Los módulos de alto nivel no deben depender de módulos de bajo nivel; ambos deben depender de abstracciones |
+
+### Organización Modular
+
+- El código debe organizarse en **módulos ES** (`import`/`export`)
+- Cada módulo debe corresponder a una regla de negocio o funcionalidad específica
+- Las funciones deben realizar **tareas específicas y bien definidas**, evitando funciones monolíticas
+- Un archivo no debe contener demasiada lógica; si crece demasiado, debe dividirse en submódulos
+
+### Ejemplo de Estructura Modular
+
+```
+src/scripts/
+├── main.js                     # Punto de entrada: inicialización y orquestación
+├── parser/
+│   ├── commitParser.js         # Lógica de parsing de commits
+│   └── validators.js           # Validaciones de formato
+├── ui/
+│   ├── playground.js           # Lógica del área de playground
+│   ├── feedback.js             # Sistema de retroalimentación al usuario
+│   └── themes.js               # Gestión de temas visuales
+├── utils/
+│   └── helpers.js              # Utilidades generales reutilizables
+└── constants/
+    └── commitTypes.js           # Constantes y configuraciones
+```
+
+### Documentación del Código JavaScript
+
+- Las funciones exportadas deben tener documentación **JSDoc** breve que describa su propósito, parámetros y retorno
+- Comentarios inline solo cuando la lógica no sea autoexplicativa
+- Preferir código autoexplicativo con nombres descriptivos sobre comentarios excesivos
+
+Ejemplo:
+```javascript
+/**
+ * Parses a conventional commit message and returns its components.
+ * @param {string} message - The raw commit message to parse
+ * @returns {{ type: string, scope: string|null, description: string }} Parsed commit object
+ */
+const parseCommitMessage = (message) => {
+  // ...implementation
+};
+```
+
+## Lineamientos de Rendimiento y Producción
+
+### Minificación y Optimización
+
+- Todo el CSS y JavaScript del sitio debe minificarse para producción
+- El proceso de build debe configurarse para generar archivos `.min.css` y `.min.js` (o bundles equivalentes optimizados)
+- Deben utilizarse herramientas de build como Vite, scripts npm u otra herramienta de task management para automatizar este proceso
+
+### Buenas Prácticas de Rendimiento
+
+- Carga diferida de scripts con `defer` o `type="module"`
+- Optimización de imágenes y recursos estáticos
+- Uso eficiente del DOM: preferir manipulación mínima y batch de cambios
+- Evitar reflows y repaints innecesarios
+
 ## Ejemplos de Flujos de Trabajo
 
 ### Desarrollo de Feature
@@ -314,5 +524,5 @@ Al trabajar con este repositorio:
 
 ---
 
-**Última actualización:** 2026-02-08  
+**Última actualización:** 2026-02-10  
 **Fuente:** CONTRIBUTING.md v1.0.0

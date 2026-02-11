@@ -137,5 +137,110 @@ When working with this repository:
 - Maintain content equivalence between .h.md and .md versions without information loss
 - Verify dual-file convention compliance in Pull Requests
 
-Last updated: 2026-02-09
+## Project Description
+
+Educational playground website for teaching Conventional Commits. Users learn and practice conventional commit specification interactively in the browser.
+
+## Technology Stack
+
+Base technologies: HTML5, CSS3, JavaScript (ECMAScript 2026+). No frameworks.
+
+Vanilla-first philosophy: Avoid external libraries whenever possible. Build the site using only standard web technologies. Use external libraries only when functionality is complex and manual implementation is impractical or error-prone. When libraries are needed, manage them with npm. Use Vite for module resolution and bundling if applicable.
+
+Build tooling: Configure at least one task manager (Vite, Gulp, or npm scripts) for compilation and processing. Production output must serve minified CSS and JavaScript. Build process must automate: CSS minification, JS minification, and any other required optimizations.
+
+## Agent Developer Profile
+
+Act as a senior expert web developer with deep expertise in: vanilla HTML/CSS/JavaScript development, enterprise-level Node.js/npm/Vite knowledge, SOLID principles applied to frontend development, performance optimization, accessibility, and modern web standards.
+
+## Project Structure
+
+All source code resides in `src/`. Internal organization:
+
+```
+src/
+├── index.html
+├── styles/          # CSS files
+│   ├── main.css     # Entry point or main styles
+│   └── [module].css # Per-section or per-module styles
+├── scripts/         # JavaScript files
+│   ├── main.js      # Entry point: initialization and orchestration
+│   └── [module]/    # Subfolders per business module
+│       └── [feature].js
+└── assets/          # Static resources (images, fonts, etc.)
+```
+
+styles/ folder: All CSS in `src/styles/`. Organize so affected site section is identifiable. Separate files per module/section encouraged. Section comments welcome but do not over-comment.
+
+scripts/ folder: All JS in `src/scripts/`. Subfolders organized by business modules or domain logic. Each module has a clear, single responsibility. Use ES modules (`import`/`export`).
+
+## HTML Guidelines
+
+Use semantic HTML5 tags: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`, etc.
+
+Mark important sections with start and end comments to guide developers:
+```html
+<!-- Hero Section -->
+<section class="hero">...</section>
+<!-- /Hero Section -->
+```
+
+Comment rules: Concise and descriptive. Only mark start (`<!-- Name -->`) and end (`<!-- /Name -->`) of relevant sections. Do not over-comment. Write only what is needed for developers to understand the layout structure quickly.
+
+Use modern HTML5 attributes. Maintain accessibility with ARIA attributes when needed. Correct document structure: `<!DOCTYPE html>`, `<html lang="es">`, `<head>`, `<body>`.
+
+## CSS Guidelines
+
+Each CSS file contains styles for a specific site section or module. Within each file, organize styles so the affected UI part is easily identifiable. Use section comments to delimit logical blocks without overuse:
+
+```css
+/* === Hero Section === */
+.hero { }
+.hero__title { }
+
+/* === Playground Section === */
+.playground { }
+```
+
+Use modern CSS features: Custom Properties (`--variables`), Grid, Flexbox, Container Queries, `clamp()`, `min()`, `max()`, etc. Prefer relative units (`rem`, `em`, `%`, `vw`, `vh`) over absolute units. Keep specificity low and predictable. Follow a consistent naming convention (e.g., BEM or similar) for CSS classes.
+
+## JavaScript Guidelines
+
+Use ECMAScript 2026+ (latest modern version). Prefer arrow functions (`=>`) unless it complicates readability or `this` context. Use `const` by default, `let` when reassignment is needed, never `var`. Use template literals, destructuring, spread/rest operators, optional chaining (`?.`), nullish coalescing (`??`), and other modern features.
+
+SOLID principles adapted to frontend:
+- Single Responsibility: Each function and module has one clearly defined responsibility.
+- Open/Closed: Modules are extensible without modifying existing code.
+- Liskov Substitution: Abstractions are interchangeable without altering expected behavior.
+- Interface Segregation: Export only what is needed from each module; avoid fat interfaces.
+- Dependency Inversion: High-level modules do not depend on low-level modules; both depend on abstractions.
+
+Modular organization: Use ES modules (`import`/`export`). Each module corresponds to a business rule or specific functionality. Functions perform specific, well-defined tasks; avoid monolithic functions. Split files into submodules when they grow too large.
+
+Example module structure:
+```
+src/scripts/
+├── main.js
+├── parser/
+│   ├── commitParser.js
+│   └── validators.js
+├── ui/
+│   ├── playground.js
+│   ├── feedback.js
+│   └── themes.js
+├── utils/
+│   └── helpers.js
+└── constants/
+    └── commitTypes.js
+```
+
+Documentation: Exported functions must have brief JSDoc describing purpose, parameters, and return value. Inline comments only when logic is not self-explanatory. Prefer self-documenting code with descriptive names over excessive comments.
+
+## Performance and Production Guidelines
+
+Minify all CSS and JavaScript for production. Build process generates `.min.css` and `.min.js` (or equivalent optimized bundles). Use build tools (Vite, npm scripts, or other task managers) to automate this.
+
+Performance best practices: Defer script loading with `defer` or `type="module"`. Optimize images and static assets. Efficient DOM manipulation: minimize operations and batch changes. Avoid unnecessary reflows and repaints.
+
+Last updated: 2026-02-10
 Source: CONTRIBUTING.md v1.0.0
