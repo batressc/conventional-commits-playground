@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    base: '/conventional-commits-playground/',
     root: 'src',
     build: {
         outDir: '../dist',
