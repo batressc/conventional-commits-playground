@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide: Conventional Commits</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+
+<!-- Header Section -->
+<header>
+    <div class="language-switcher">
+        <button class="lang-btn lang-btn--active" data-lang="en" aria-label="English" aria-pressed="true" title="English">
+            🇺🇸 EN
+        </button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" aria-pressed="false" title="Español">
+            🇸🇻 ES
+        </button>
+    </div>
+    <div class="badge" data-i18n-key="header.badge">v1.0.0</div>
+    <h1 data-i18n-key="header.title">Conventional Commits</h1>
+    <p data-i18n-key="header.subtitle">The definitive guide to writing commit messages that both humans and machines can understand.</p>
+</header>
+<!-- /Header Section -->
+
+<!-- Main Content -->
+<main class="container">
+
+    <!-- Introducción -->
+    <section>
+        <h2 data-i18n-key="intro.title">💡 Why is it important?</h2>
+        <p data-i18n-key="intro.description">Writing a messy commit message is easy, but maintaining a project long-term is not. Conventional Commits offers a lightweight structure that allows:</p>
+        <ul>
+            <li data-i18n-key="intro.benefits.changelog">Generate <strong>CHANGELOGs</strong> automatically.</li>
+            <li data-i18n-key="intro.benefits.semver">Determine the next semantic version number (<strong>SemVer</strong>) without human intervention.</li>
+            <li data-i18n-key="intro.benefits.history">Help other developers understand the project history quickly.</li>
+        </ul>
+    </section>
+    <!-- /Introducción -->
+
+    <!-- SemVer Section -->
+    <section>
+        <h2 data-i18n-key="semver.title">🚀 Semantic Versioning (SemVer)</h2>
+        <p data-i18n-key="semver.description">Conventional Commits and SemVer go hand in hand. The structure of your commit dictates how your software version should increment.</p>
+        
+        <div class="structure-display">
+            <span class="token v-major" data-i18n-info="semver.major">MAJOR</span>
+            <span class="v-dot">.</span>
+            <span class="token v-minor" data-i18n-info="semver.minor">MINOR</span>
+            <span class="v-dot">.</span>
+            <span class="token v-patch" data-i18n-info="semver.patch">PATCH</span>
+        </div>
+        
+        <p class="text--caption" data-i18n-key="semver.example">
+            Example: If you are on version <strong>1.0.0</strong> and you make a <code>feat: ...</code> commit, the next version will be <strong>1.1.0</strong>.
+        </p>
+    </section>
+    <!-- /SemVer Section -->
+
+    <!-- Estructura Visual -->
+    <section>
+        <h2 data-i18n-key="anatomy.title">🧩 Message Anatomy</h2>
+        <p data-i18n-key="anatomy.description">Hover over components to understand their function.</p>
+        
+        <div class="structure-display">
+            <span class="token t-type" data-i18n-info="anatomy.type">feat</span>
+            <span class="token t-scope" data-i18n-info="anatomy.scope">(api)</span>
+            <span class="token t-bang" data-i18n-info="anatomy.bang">!</span>
+            <span class="token t-colon">:</span>
+            <span class="token t-desc" data-i18n-info="anatomy.desc">add token authentication</span>
+        </div>
+
+        <p class="text--caption" data-i18n-key="anatomy.note">
+            The body and footer of the message are optional and come after a blank line.
+        </p>
+    </section>
+    <!-- /Estructura Visual -->
+
+    <!-- Tipos de Commits -->
+    <section>
+        <h2 data-i18n-key="commitTypes.title">🏷️ Commit Types</h2>
+        <p data-i18n-key="commitTypes.description">Select a tab to see the basic types or the full Angular convention list.</p>
+
+        <div class="tabs" role="tablist" aria-label="Commit types">
+            <button id="tab-basic" class="tabs__button active" role="tab" aria-selected="true" aria-controls="basic" data-i18n-key="commitTypes.tabs.basic">Main Types</button>
+            <button id="tab-angular" class="tabs__button" role="tab" aria-selected="false" aria-controls="angular" data-i18n-key="commitTypes.tabs.angular">Angular Convention (All)</button>
+        </div>
+
+        <div id="basic" class="tabs__panel active" role="tabpanel" aria-labelledby="tab-basic">
+            <div class="grid-types">
+                <!-- BREAKING CHANGE (Reordenado: 1ro) -->
+                <div class="card card--danger">
+                    <div class="card__header">
+                        <span class="card__title text-danger" data-i18n-key="commitTypes.breaking.title">BREAKING CHANGE</span>
+                        <span class="semver-tag sv-major">MAJOR</span>
+                    </div>
+                    <p data-i18n-key="commitTypes.breaking.description">A change that breaks compatibility. Indicated with <code>!</code> after the type or with a <code>BREAKING CHANGE:</code> footer.</p>
+                    <code class="code--small text-danger" data-i18n-key="commitTypes.breaking.example">feat!: drop node 12 support</code>
+                </div>
+
+                <!-- FEAT (Reordenado: 2do) -->
+                <div class="card">
+                    <div class="card__header">
+                        <span class="card__title" data-i18n-key="commitTypes.feat.title">feat</span>
+                        <span class="semver-tag sv-minor">MINOR</span>
+                    </div>
+                    <p data-i18n-key="commitTypes.feat.description">Introduces a new feature to the code (feature). Equivalent to MINOR in SemVer.</p>
+                    <code class="code--small text-primary" data-i18n-key="commitTypes.feat.example">feat: allow zoom on images</code>
+                </div>
+
+                <!-- FIX (Reordenado: 3ro) -->
+                <div class="card">
+                    <div class="card__header">
+                        <span class="card__title" data-i18n-key="commitTypes.fix.title">fix</span>
+                        <span class="semver-tag sv-patch">PATCH</span>
+                    </div>
+                    <p data-i18n-key="commitTypes.fix.description">Fixes a bug in the code. Equivalent to PATCH in SemVer.</p>
+                    <code class="code--small text-success" data-i18n-key="commitTypes.fix.example">fix: handle null user id</code>
+                </div>
+            </div>
+        </div>
+
+        <div id="angular" class="tabs__panel" role="tabpanel" aria-labelledby="tab-angular">
+            <p class="text--intro" data-i18n-key="commitTypes.angularIntro">
+                Although the specification allows any type, these are almost universally adopted.
+            </p>
+            <div class="grid-types">
+                <div class="card">
+                    <div class="card__header"><span class="card__title">docs</span></div>
+                    <p data-i18n-key="commitTypes.docs.description">Changes affecting only documentation (README files, JSDoc comments, tutorials), without modifying functional code.</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">style</span></div>
+                    <p data-i18n-key="commitTypes.style.description">Format changes that do not affect code logic (whitespace, indentation, missing semicolons). Not to be confused with CSS styles.</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">refactor</span></div>
+                    <p data-i18n-key="commitTypes.refactor.description">A change to production code that neither fixes bugs nor adds features, but improves structure or readability.</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">perf</span></div>
+                    <p data-i18n-key="commitTypes.perf.description">Changes specifically dedicated to improving system performance (algorithm optimization, reducing load times).</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">test</span></div>
+                    <p data-i18n-key="commitTypes.test.description">Addition of missing unit or integration tests, or fixing existing tests that were not working correctly.</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">build</span></div>
+                    <p data-i18n-key="commitTypes.build.description">Changes affecting the build system or external dependencies (e.g., npm, maven, gradle, webpack, gulp).</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">ci</span></div>
+                    <p data-i18n-key="commitTypes.ci.description">Changes to Continuous Integration configuration files and scripts (e.g., GitHub Actions, Travis, CircleCI).</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">chore</span></div>
+                    <p data-i18n-key="commitTypes.chore.description">Routine tasks that do not modify source code or tests (e.g., version updates, script maintenance tasks).</p>
+                </div>
+                <div class="card">
+                    <div class="card__header"><span class="card__title">revert</span></div>
+                    <p data-i18n-key="commitTypes.revert.description">Used to revert a previous commit. The message body usually contains the hash of the commit being reverted.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Tipos de Commits -->
+
+    <!-- Ejemplos Avanzados -->
+    <section>
+        <h2 data-i18n-key="examples.title">📚 Real Examples</h2>
+        
+        <h3 data-i18n-key="examples.basic.title">1. Basic commit with type and scope</h3>
+        <pre data-i18n-key="examples.basic.code">feat(ui): add dark mode button</pre>
+
+        <h3 data-i18n-key="examples.complete.title">2. Complete commit with body and multiple footers</h3>
+        <pre data-i18n-key="examples.complete.code">fix: fix user validation
+
+Updated logic to allow special characters in names.
+This solves the issue reported by support.
+
+Reviewed-by: J. Doe
+Refs: #456</pre>
+
+        <h3 data-i18n-key="examples.breaking.title">3. Breaking Change (Two variants for the same change)</h3>
+        <p class="text--note" data-i18n-key="examples.breaking.optionA"><strong>Option A (Concise):</strong> Using <code>!</code> in the header to indicate MAJOR impact.</p>
+        <pre data-i18n-key="examples.breaking.codeA">feat(api)!: change error response structure</pre>
+        
+        <p class="text--note" data-i18n-key="examples.breaking.optionB"><strong>Option B (Explanatory):</strong> Using the <code>BREAKING CHANGE</code> footer when detail is needed.</p>
+        <pre data-i18n-key="examples.breaking.codeB">feat(api): change error response structure
+
+BREAKING CHANGE: the 'error' property now returns an object instead of a string.</pre>
+    </section>
+    <!-- /Ejemplos Avanzados -->
+
+    <!-- Playground -->
+    <section>
+        <h2 data-i18n-key="playground.title">⚡ Practice Zone</h2>
+        <p data-i18n-key="playground.description">Try writing a complete message. The validator will analyze the header, body, and footer separately.</p>
+        
+        <div class="playground">
+            <div class="playground__input-wrapper">
+                <label for="commit-input" data-i18n-key="playground.label">Commit Draft:</label>
+                <textarea id="commit-input" rows="9" data-i18n-placeholder="playground.placeholder"></textarea>
+            </div>
+            
+            <div id="validation-result" class="hidden"></div>
+
+            <div id="visual-stack" class="playground__visual-stack hidden">
+                <!-- Header Card -->
+                <div id="card-header" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
+                    <span class="visual-breakdown__pill" data-i18n-key="playground.cards.header">Header</span>
+                    <div id="content-header" class="visual-breakdown__content"></div>
+                    <div id="feedback-header" class="visual-breakdown__feedback"></div>
+                </div>
+
+                <!-- Body Card -->
+                <div id="card-body" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
+                    <span class="visual-breakdown__pill" data-i18n-key="playground.cards.body">Body</span>
+                    <div id="content-body" class="visual-breakdown__content"></div>
+                    <div id="feedback-body" class="visual-breakdown__feedback"></div>
+                </div>
+
+                <!-- Footer Card -->
+                <div id="card-footer" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
+                    <span class="visual-breakdown__pill" data-i18n-key="playground.cards.footer">Footer(s)</span>
+                    <div id="content-footer" class="visual-breakdown__content"></div>
+                    <div id="feedback-footer" class="visual-breakdown__feedback"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Playground -->
+
+</main>
+<!-- /Main Content -->
+
+<!-- Footer Section -->
+<footer>
+    <p><span data-i18n-key="footer.builtFor">Built to educate about</span> <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener noreferrer" data-i18n-key="footer.link">Conventional Commits</a>.</p>
+</footer>
+<!-- /Footer Section -->
+
+<script type="module" src="./scripts/main.js"></script>
+
+</body>
+</html>

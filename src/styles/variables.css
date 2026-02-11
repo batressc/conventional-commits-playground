@@ -1,0 +1,14 @@
+/* === CSS Custom Properties (Design Tokens) === */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary: #475569;
+    --accent: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --text-main: #1e293b;
+    --text-light: #64748b;
+    --code-bg: #1e293b;
+}
