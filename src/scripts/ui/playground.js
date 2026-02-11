@@ -55,6 +55,9 @@ const handleHeaderValidation = (parsed) => {
     const { header, hasBreakingFooter } = parsed;
     const { cardHeader, contentHeader, fbHeader } = elements;
 
+    // Show header card (always visible when there's input)
+    setVisible(cardHeader, true);
+
     contentHeader.textContent = header;
     const result = validateHeader(header, hasBreakingFooter);
 

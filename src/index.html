@@ -205,14 +205,14 @@ BREAKING CHANGE: the 'error' property now returns an object instead of a string.
         <div class="playground">
             <div class="playground__input-wrapper">
                 <label for="commit-input" data-i18n-key="playground.label">Commit Draft:</label>
-                <textarea id="commit-input" data-i18n-placeholder="playground.placeholder"></textarea>
+                <textarea id="commit-input" rows="9" data-i18n-placeholder="playground.placeholder"></textarea>
             </div>
             
             <div id="validation-result" class="hidden"></div>
 
             <div id="visual-stack" class="playground__visual-stack hidden">
                 <!-- Header Card -->
-                <div id="card-header" class="visual-breakdown__card visual-breakdown__card--neutral">
+                <div id="card-header" class="visual-breakdown__card visual-breakdown__card--neutral hidden">
                     <span class="visual-breakdown__pill" data-i18n-key="playground.cards.header">Header</span>
                     <div id="content-header" class="visual-breakdown__content"></div>
                     <div id="feedback-header" class="visual-breakdown__feedback"></div>
